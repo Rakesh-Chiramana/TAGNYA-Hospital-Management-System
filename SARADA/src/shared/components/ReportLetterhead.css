@@ -1,0 +1,39 @@
+.report-letterhead-wrap {
+  margin-bottom: 1rem;
+}
+
+.report-letterhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+}
+
+.report-letterhead-logo {
+  height: 4.5rem;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.report-letterhead-address-bar {
+  background: transparent;
+  color: #0284c7;
+  padding: 0.4rem 0.75rem;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  border-top: 2px solid #0284c7;
+  border-bottom: 2px solid #0284c7;
+}
+
+@media print {
+  .report-letterhead-address-bar {
+    background: transparent !important;
+    color: #0284c7 !important;
+    border-top: 2px solid #0284c7 !important;
+    border-bottom: 2px solid #0284c7 !important;
+  }
+}

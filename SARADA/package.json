@@ -1,0 +1,38 @@
+{
+  "name": "accendia-pro---hospital-management-system",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "tsc --noEmit",
+    "prettier": "prettier --write ."
+  },
+  "dependencies": {
+    "baseline-browser-mapping": "^2.10.17",
+    "caniuse-lite": "^1.0.30001803",
+    "canvg": "^3.0.10",
+    "core-js": "^3.49.0",
+    "debug": "^4.4.3",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.7",
+    "lucide-react": "^0.468.0",
+    "node-releases": "^2.0.50",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "recharts": "^3.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.0.0",
+    "esbuild": "^0.28.1",
+    "prettier": "^3.8.3",
+    "rollup": "^4.62.2",
+    "typescript": "~5.8.2",
+    "vite": "^6.4.2"
+  }
+}

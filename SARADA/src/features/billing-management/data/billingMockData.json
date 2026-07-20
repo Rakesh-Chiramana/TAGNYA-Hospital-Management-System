@@ -1,0 +1,15 @@
+﻿{
+  "serviceDepartments": [
+    "Consultation Fee",
+    "Pharmacy / Medication",
+    "Laboratory Diagnostics",
+    "Surgical Suite Charge",
+    "Room / Accommodation"
+  ],
+  "filterStatuses": [
+    "All",
+    "Paid",
+    "Pending"
+  ],
+  "defaultInvoiceStartId": 8000
+}

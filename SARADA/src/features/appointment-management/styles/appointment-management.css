@@ -1,0 +1,95 @@
+﻿.appointment-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.appointment-header {
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .appointment-header {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.status-badge {
+  padding: 1rem;
+  background-color: rgba(61, 129, 214, 0.1);
+  border-radius: 1rem;
+  border: 1px solid rgba(61, 129, 214, 0.2);
+}
+
+.new-appointment-btn {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  background-color: #06284e;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 1rem;
+  transition: all 300ms;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.new-appointment-btn:hover {
+  background-color: #1a5b9c;
+}
+
+.roster-card {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 2rem;
+  border: 1px solid #dce6f2;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.roster-item {
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid transparent;
+  transition: all 300ms;
+  cursor: default;
+}
+
+.roster-item:hover {
+  border-color: #8ebff0;
+  background-color: rgba(236, 253, 245, 0.3);
+}
+
+.appointment-booking-form input,
+.appointment-booking-form select,
+.appointment-booking-form textarea {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.appointment-booking-form input:focus,
+.appointment-booking-form select:focus,
+.appointment-booking-form textarea:focus {
+  background-color: white;
+  box-shadow: 0 0 0 4px rgba(61, 129, 214, 0.1);
+  border-color: #3d81d6;
+  transform: translateY(-1px);
+}
+
+.appointment-booking-form label {
+  transition: color 0.2s ease;
+}
+
+.appointment-booking-form div:focus-within label {
+  color: #3d81d6;
+}

@@ -1,0 +1,262 @@
+:root {
+  --clinical-green: #1a5b9c;
+  --clinical-glow: rgba(26, 91, 156, 0.2);
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  overflow-x: hidden;
+  background-color: #f8fafc;
+}
+
+/* Static Mesh Background */
+.mesh-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-color: #f8fafc;
+  background-image:
+    radial-gradient(at 0% 0%,
+      rgba(26, 91, 156, 0.05) 0px,
+      transparent 50%),
+    radial-gradient(at 100% 0%,
+      rgba(61, 129, 214, 0.05) 0px,
+      transparent 50%),
+    radial-gradient(at 100% 100%,
+      rgba(26, 91, 156, 0.05) 0px,
+      transparent 50%),
+    radial-gradient(at 0% 100%,
+      rgba(61, 129, 214, 0.05) 0px,
+      transparent 50%);
+}
+
+/* Glassmorphism Refinement */
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px 0 rgba(26, 91, 156, 0.04);
+}
+
+.glass-card:hover {
+  border: 1px solid rgba(26, 91, 156, 0.2);
+  box-shadow: 0 12px 40px 0 rgba(26, 91, 156, 0.08);
+}
+
+/* Print Media Queries */
+@media print {
+  @page {
+    margin: 0.5cm;
+    size: auto;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    background: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  .mesh-bg,
+  .print\:hidden,
+  nav,
+  sidebar,
+  header,
+  footer,
+  button,
+  .modal-overlay-bg,
+  [role="dialog"]>div:first-child {
+    /* Hide modal header */
+    display: none !important;
+  }
+
+  #root {
+    position: static !important;
+    width: 100% !important;
+  }
+
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  .fixed {
+    position: static !important;
+  }
+
+  #printable-bill,
+  #printable-report,
+  #pharmacy-bill {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: white !important;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  .print\:static,
+  .print\:block,
+  .print\:bg-white,
+  .print\:p-0,
+  .print\:backdrop-blur-none,
+  .print\:overflow-visible {
+    display: block !important;
+    position: static !important;
+    background: white !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .print-hide-on-print {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #printable-bill-overlay .print-hide-on-print,
+  #printable-bill .print-hide-on-print,
+  #printable-bill-overlay button {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Ensure the container of the printable report doesn't have scroll/overflow */
+  .overflow-y-auto {
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  .modal-content,
+  [role="dialog"] {
+    position: static !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    overflow: visible !important;
+    background: white !important;
+  }
+
+  .modal-overlay,
+  .modal-overlay-bg,
+  .fixed,
+  .backdrop-blur-xl,
+  .backdrop-blur-none,
+  #printable-bill-overlay,
+  .modal-content,
+  .modal-body,
+  [role="dialog"],
+  #printable-bill {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: white !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+    visibility: visible !important;
+  }
+
+  html,
+  body,
+  #root,
+  main {
+    visibility: visible !important;
+  }
+
+  #printable-bill {
+    width: 100% !important;
+    min-height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  #printable-bill,
+  #printable-bill *,
+  #printable-bill-overlay,
+  #printable-bill-overlay * {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  #printable-bill-overlay .print-hide-on-print,
+  #printable-bill-overlay .print-hide-on-print *,
+  #printable-bill .print-hide-on-print,
+  #printable-bill .print-hide-on-print * {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .animate-in,
+  .animate-scale-in {
+    animation: none !important;
+  }
+}
+
+/* DEACTIVATED ANIMATIONS */
+.animate-ticker,
+.animate-float-up,
+.animate-pulse,
+.animate-bounce,
+.animate-in,
+.animate-fade-in,
+.animate-scale-in,
+.animate-soft-pulse,
+.animate-heartbeat,
+.stagger-item,
+.pulse-dot {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.stagger-item {
+  opacity: 1;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(26, 91, 156, 0.1);
+  border-radius: 10px;
+}

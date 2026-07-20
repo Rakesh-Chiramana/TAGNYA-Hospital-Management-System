@@ -1,0 +1,163 @@
+{
+  "DIAGNOSTIC_PRICES": {
+    "Complete Blood Count (CBC)": 45.0,
+    "Blood Sugar / Glucose Profile": 35.0,
+    "HbA1c (Glycated Hemoglobin)": 60.0,
+    "Thyroid Profile (T3, T4, TSH)": 95.0,
+    "Lipid Profile (Cholesterol)": 65.0,
+    "Liver Function Test (LFT)": 85.0,
+    "Kidney Function Test (KFT)": 80.0,
+    "Urine Analysis (Routine)": 25.0,
+    "Comprehensive Health Profile": 250.0
+  },
+  "HEALTH_CHECKUP_TESTS": [
+    "Complete Blood Count (CBC)",
+    "Blood Sugar / Glucose Profile",
+    "Lipid Profile (Cholesterol)",
+    "Liver Function Test (LFT)",
+    "Kidney Function Test (KFT)",
+    "Thyroid Profile (T3, T4, TSH)"
+  ],
+  "DIAGNOSTIC_RANGES": {
+    "hb": {
+      "label": "Hemoglobin",
+      "min": 13.0,
+      "max": 17.0,
+      "unit": "g/dL",
+      "category": "HAEMATOLOGY"
+    },
+    "rbc": {
+      "label": "RBC Count",
+      "min": 4.5,
+      "max": 5.5,
+      "unit": "mill/cumm",
+      "category": "HAEMATOLOGY"
+    },
+    "wbc": {
+      "label": "WBC Count",
+      "min": 4000,
+      "max": 11000,
+      "unit": "/cumm",
+      "category": "HAEMATOLOGY"
+    },
+    "platelets": {
+      "label": "Platelets",
+      "min": 150000,
+      "max": 410000,
+      "unit": "/cumm",
+      "category": "HAEMATOLOGY"
+    },
+    "fbs": {
+      "label": "Fasting Sugar",
+      "min": 70,
+      "max": 100,
+      "unit": "mg/dL",
+      "category": "DIABETIC"
+    },
+    "ppbs": {
+      "label": "Post-Prandial",
+      "min": 70,
+      "max": 140,
+      "unit": "mg/dL",
+      "category": "DIABETIC"
+    },
+    "rbs": {
+      "label": "Random Sugar",
+      "min": 70,
+      "max": 140,
+      "unit": "mg/dL",
+      "category": "DIABETIC"
+    },
+    "hba1c": {
+      "label": "HbA1c",
+      "min": 4.0,
+      "max": 5.6,
+      "unit": "%",
+      "category": "DIABETIC"
+    },
+    "t3": {
+      "label": "T3",
+      "min": 0.8,
+      "max": 2.0,
+      "unit": "ng/mL",
+      "category": "THYROID"
+    },
+    "t4": {
+      "label": "T4",
+      "min": 5.1,
+      "max": 14.1,
+      "unit": "µg/dL",
+      "category": "THYROID"
+    },
+    "tsh": {
+      "label": "TSH",
+      "min": 0.5,
+      "max": 5.0,
+      "unit": "µIU/mL",
+      "category": "THYROID"
+    },
+    "chol": {
+      "label": "Total Cholesterol",
+      "min": 100,
+      "max": 200,
+      "unit": "mg/dL",
+      "category": "LIPID"
+    },
+    "hdl": {
+      "label": "HDL Cholesterol",
+      "min": 40,
+      "max": 60,
+      "unit": "mg/dL",
+      "category": "LIPID"
+    },
+    "ldl": {
+      "label": "LDL Cholesterol",
+      "min": 0,
+      "max": 100,
+      "unit": "mg/dL",
+      "category": "LIPID"
+    },
+    "trig": {
+      "label": "Triglycerides",
+      "min": 0,
+      "max": 150,
+      "unit": "mg/dL",
+      "category": "LIPID"
+    },
+    "sgot": {
+      "label": "SGOT (AST)",
+      "min": 0,
+      "max": 40,
+      "unit": "U/L",
+      "category": "LIVER"
+    },
+    "sgpt": {
+      "label": "SGPT (ALT)",
+      "min": 0,
+      "max": 40,
+      "unit": "U/L",
+      "category": "LIVER"
+    },
+    "bili": {
+      "label": "Bilirubin",
+      "min": 0.3,
+      "max": 1.2,
+      "unit": "mg/dL",
+      "category": "LIVER"
+    },
+    "urea": {
+      "label": "Blood Urea",
+      "min": 10,
+      "max": 50,
+      "unit": "mg/dL",
+      "category": "KIDNEY"
+    },
+    "creat": {
+      "label": "Creatinine",
+      "min": 0.6,
+      "max": 1.2,
+      "unit": "mg/dL",
+      "category": "KIDNEY"
+    }
+  }
+}

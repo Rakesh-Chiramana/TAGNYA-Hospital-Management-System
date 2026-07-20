@@ -1,0 +1,100 @@
+
+export {
+  // Navigation & Layout
+  LayoutDashboard,
+  Menu,
+  LogOut,
+  Settings,
+
+  // Users & People
+  User,
+  Users,
+  UserPlus,
+  UserCheck,
+  UserX,
+
+  // Medical & Health
+  Stethoscope,
+  Heart,
+  Activity,
+  Pill,
+  FlaskConical,
+  Microscope,
+  Thermometer,
+  Droplets,
+  Scale,
+  Lock,
+  ShieldAlert,
+  ShieldCheck,
+
+  // Hospital & Facility
+  Hospital,
+  Bed,
+  BedDouble,
+  AlertTriangle,
+  AlertCircle,
+
+  // Time & Calendar
+  Calendar,
+  CalendarRange,
+  Clock,
+  Timer,
+
+  // Data & Charts
+  BarChart3,
+  PieChart,
+  TrendingUp,
+  TrendingDown,
+  FileText,
+
+  // Medical Items
+  Syringe,
+  Package,
+  Receipt,
+  ReceiptIndianRupee,
+
+  // Utilities
+  IndianRupee,
+  DollarSign,
+  CreditCard,
+  History,
+  Bookmark,
+  CheckCircle,
+  CheckCircle2,
+  Info,
+  Phone,
+  MapPin,
+  Coffee,
+  Smile,
+  Wind,
+  Star,
+  Zap,
+  Flame,
+  Hash,
+  PenTool,
+  ClipboardList,
+  Bell,
+  Truck,
+  ShoppingCart,
+  Search,
+  Filter,
+  Plus,
+  PlusCircle,
+  Download,
+  Edit,
+  X,
+  XCircle,
+  Eye,
+  EyeOff,
+  Shield,
+  Briefcase,
+  Trash2,
+  Printer,
+  ChevronDown,
+  Database,
+  ShoppingBag,
+  ArrowLeft,
+  ArrowRight,
+  RefreshCw,
+  Layers
+} from "lucide-react";

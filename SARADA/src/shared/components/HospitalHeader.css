@@ -1,0 +1,163 @@
+.hospital-header-container {
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 2rem;
+  border: 1px solid #dce6f2;
+  border-top: 4px solid #0284c7;
+  background-color: white;
+}
+
+.hospital-header-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+}
+
+.hospital-header-left {
+  flex-shrink: 0;
+}
+
+.hospital-header-logo {
+  height: 4.5rem;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Prescription, admission receipt, and similar full documents */
+.hospital-header-container--large .hospital-header-main {
+  align-items: stretch;
+  padding: 0.5rem 1.75rem;
+  min-height: 8rem;
+}
+
+.hospital-header-container--large .hospital-header-left {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+}
+
+.hospital-header-container--large .hospital-header-logo {
+  height: 6.5rem;
+  width: auto;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.hospital-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.hospital-header-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.hospital-header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.services-block {
+  text-align: right;
+  line-height: 1.1;
+}
+
+.services-large {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #0284c7;
+}
+
+.services-sub {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #0284c7;
+  letter-spacing: 1px;
+}
+
+.divider-line {
+  width: 2px;
+  height: 2.25rem;
+  background-color: #e28743;
+}
+
+.contact-block {
+  text-align: left;
+  line-height: 1.35;
+}
+
+.contact-phone {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0284c7;
+}
+
+.contact-email {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0284c7;
+}
+
+.hospital-header-address-bar {
+  background: transparent;
+  color: #0284c7;
+  padding: 0.45rem 1rem;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  border-top: 2px solid #0284c7;
+  border-bottom: 2px solid #0284c7;
+}
+
+@media print {
+  .hospital-header-container {
+    border: 1px solid #cbd5e1 !important;
+    border-top: 4px solid #005c97 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    margin-bottom: 5mm !important;
+  }
+
+  .hospital-header-logo {
+    height: 4rem !important;
+    width: auto !important;
+  }
+
+  .hospital-header-container--large .hospital-header-main {
+    align-items: stretch !important;
+    min-height: 6.5rem !important;
+  }
+
+  .hospital-header-container--large .hospital-header-logo {
+    height: 6.5rem !important;
+    width: auto !important;
+    object-fit: contain !important;
+  }
+
+  .hospital-header-line1 {
+    font-size: 1rem !important;
+  }
+
+  .hospital-header-line2 {
+    font-size: 0.9rem !important;
+  }
+
+  .hospital-header-address-bar {
+    background: transparent !important;
+    color: #0f172a !important;
+    border-top: 1px solid #cbd5e1 !important;
+    border-bottom: 1px solid #cbd5e1 !important;
+  }
+}

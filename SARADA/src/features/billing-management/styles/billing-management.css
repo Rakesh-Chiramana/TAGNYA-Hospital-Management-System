@@ -1,0 +1,66 @@
+﻿.billing-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.revenue-cluster {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .revenue-cluster {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media print {
+  .revenue-cluster {
+    display: none;
+  }
+}
+
+.yield-card {
+  background-color: #06284e;
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  color: white;
+  box-shadow: 0 15px 35px -12px rgba(6, 40, 78, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.queue-card {
+  position: relative;
+  background: linear-gradient(to bottom right, #f59e0b, #ea580c, #be123c);
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 30px -15px rgba(245, 158, 11, 0.3);
+  transition: all 400ms;
+  overflow: hidden;
+  color: white;
+}
+
+.queue-card:hover {
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-0.2rem);
+}
+
+.released-card {
+  position: relative;
+  background: linear-gradient(to bottom right, #3b82f6, #2563eb, #4338ca);
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 30px -15px rgba(59, 130, 246, 0.3);
+  transition: all 400ms;
+  overflow: hidden;
+  color: white;
+}
+
+.released-card:hover {
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-0.2rem);
+}

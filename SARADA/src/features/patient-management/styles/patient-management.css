@@ -1,0 +1,234 @@
+.patient-management-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.management-header {
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .management-header {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+}
+
+.header-title {
+  font-size: 2.25rem;
+  font-weight: 900;
+  color: #06284e;
+  letter-spacing: -0.05em;
+}
+
+.header-subtitle {
+  font-size: 0.625rem;
+  font-weight: 900;
+  color: #06284e;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  opacity: 0.5;
+}
+
+.action-button {
+  background-color: #1a5b9c;
+  color: white;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border-radius: 1.5rem;
+  font-weight: 900;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: all 300ms;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+}
+
+.action-button:hover {
+  background-color: #12488a;
+}
+
+.stats-grid {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.5rem;
+  display: grid;
+}
+
+@media (min-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.stat-card {
+  padding: 2rem;
+  background-color: white;
+  border: 1px solid #f4f8fc;
+  border-radius: 2.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: all 300ms;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo fills full header height on prescription / admission documents */
+.printable-prescription .hospital-header-container--large .hospital-header-main {
+  align-items: stretch !important;
+  min-height: 8rem !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+.printable-prescription .hospital-header-container--large .hospital-header-left {
+  display: flex !important;
+  align-items: center !important;
+  align-self: stretch !important;
+}
+
+.printable-prescription .hospital-header-container--large .hospital-header-logo {
+  height: 6.5rem !important;
+  width: auto !important;
+  object-fit: contain !important;
+}
+
+@media print {
+  /* Hide everything on the page */
+  body * {
+    visibility: hidden;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Specifically show the prescription and its children */
+  .printable-prescription,
+  .printable-prescription * {
+    visibility: visible;
+  }
+
+  /* Standardize A4 Print Layout */
+  @page {
+    size: A4;
+    margin: 5mm 10mm;
+  }
+
+  .printable-prescription .hospital-header-container--large .hospital-header-logo {
+    height: 6.5rem !important;
+    width: auto !important;
+    object-fit: contain !important;
+  }
+
+  .printable-prescription {
+    position: relative !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 265mm !important; /* Safer height to ensure single page */
+    max-height: 282mm !important; /* Prevent spilling to second page */
+    margin: 0 !important;
+    padding: 2mm !important; 
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    visibility: visible !important;
+    z-index: 9999 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    break-inside: avoid !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Scale up typography for A4 readability - optimized for 1 page */
+  .printable-prescription .text-\[10px\] { 
+    font-size: 9.5pt !important; 
+    line-height: 1.3 !important;
+  }
+  .printable-prescription .text-\[8px\] { 
+    font-size: 8pt !important; 
+  }
+  .printable-prescription .text-sm { 
+    font-size: 11pt !important; 
+  }
+  .printable-prescription .text-lg { 
+    font-size: 14pt !important; 
+  }
+
+  /* Ensure the prescription box expands to fill available space but doesn't force a break */
+  .printable-prescription .min-h-\[350px\] {
+    min-height: 120mm !important; 
+    flex: 1 !important;
+    margin-bottom: 5mm !important;
+    border: none !important; /* Removed border */
+    border-radius: 4px !important; /* Subtle rounding */
+    padding: 10mm !important;
+  }
+
+  /* Compact Vitals Table for Print */
+  .printable-prescription .w-full.max-w-\[180px\].border {
+    border: 1px solid #94a3b8 !important;
+    background-color: white !important;
+  }
+
+  .printable-prescription .w-full.max-w-\[180px\].border div {
+    border-color: #cbd5e1 !important;
+  }
+
+  /* Force footer to bottom */
+  .printable-prescription .print-footer {
+    margin-top: auto !important;
+    padding-top: 5mm !important;
+    display: flex !important;
+    justify-content: flex-end !important; /* Force to right side */
+  }
+
+  /* Force background colors and images to print */
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    background-color: white !important;
+  }
+
+  /* Hide print buttons and other UI elements */
+  .print\:hidden,
+  .modal-close-btn,
+  .modal-header {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+
+.registration-compact-form,
+.registration-compact-form input,
+.registration-compact-form select {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.registration-compact-form input:focus,
+.registration-compact-form select:focus {
+  background-color: white;
+  box-shadow: 0 0 0 4px rgba(61, 129, 214, 0.1);
+  transform: translateY(-1px);
+}
+
+.registration-compact-form label {
+  transition: color 0.2s ease;
+}
+
+.registration-compact-form div:focus-within label {
+  color: #3d81d6;
+}

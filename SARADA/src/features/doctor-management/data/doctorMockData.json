@@ -1,0 +1,10 @@
+{
+  "doctors": [],
+  "statusOptions": [
+    "Available",
+    "On Rounds",
+    "In Surgery",
+    "On Leave",
+    "Emergency Only"
+  ]
+}

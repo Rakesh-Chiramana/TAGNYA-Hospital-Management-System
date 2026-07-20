@@ -1,0 +1,58 @@
+.lab-report-paper {
+  background-color: white;
+  color: #06284e;
+  font-family: sans-serif;
+  padding: 0.25rem;
+  max-width: 56rem;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #f4f8fc;
+}
+
+@media print {
+  .lab-report-paper {
+    padding: 0;
+    border: none;
+  }
+}
+
+.report-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 4px solid #2563eb;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.report-logo-circle {
+  width: 4rem;
+  height: 4rem;
+  background-color: #dc2626;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.report-patient-info {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #dce6f2;
+}
+
+.health-score-banner {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #f0f7ff;
+  border-radius: 1.5rem;
+  border: 1px solid #b6d4f4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

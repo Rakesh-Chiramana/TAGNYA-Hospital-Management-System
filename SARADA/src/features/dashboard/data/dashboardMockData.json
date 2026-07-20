@@ -1,0 +1,11 @@
+{
+  "telemetryData": [],
+  "colorStyles": {
+    "emerald": { "bgLight": "bg-hospital-blue/10", "bgSolid": "bg-hospital-blue", "text": "text-hospital-blue", "border": "hover:border-hospital-blue/10" },
+    "orange": { "bgLight": "bg-orange-50", "bgSolid": "bg-orange-500", "text": "text-orange-600", "border": "hover:border-orange-100" },
+    "blue": { "bgLight": "bg-blue-50", "bgSolid": "bg-blue-500", "text": "text-blue-600", "border": "hover:border-blue-100" },
+    "amber": { "bgLight": "bg-amber-50", "bgSolid": "bg-amber-500", "text": "text-amber-600", "border": "hover:border-amber-100" },
+    "rose": { "bgLight": "bg-rose-50", "bgSolid": "bg-rose-500", "text": "text-rose-600", "border": "hover:border-rose-100" },
+    "sky": { "bgLight": "bg-sky-50", "bgSolid": "bg-sky-500", "text": "text-sky-600", "border": "hover:border-sky-100" }
+  }
+}

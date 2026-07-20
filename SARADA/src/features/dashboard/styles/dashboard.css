@@ -1,0 +1,89 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.command-bar {
+  background-color: #06284e;
+  color: white;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 25px 50px -12px rgba(6, 40, 78, 0.4);
+}
+
+.command-bar-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+  transition: all 300ms;
+}
+
+.command-bar-status:hover {
+  transform: scale(1.01);
+}
+
+.command-bar-metrics {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .command-bar-metrics {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    border-left: 1px solid rgba(30, 41, 59, 0.5);
+    border-right: 1px solid rgba(30, 41, 59, 0.5);
+  }
+}
+
+.quick-action-card {
+  position: relative;
+  padding: 2rem;
+  border-radius: 3rem;
+  transition: all 0.5s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.quick-action-card:hover {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transform: translateY(-0.5rem);
+}
+
+.card-registry {
+  background: linear-gradient(to bottom right, #3d81d6, #1a5b9c, #0f3c7a);
+  box-shadow: 0 10px 40px -20px rgba(61, 129, 214, 0.4);
+}
+
+.card-clinical {
+  background: linear-gradient(to bottom right, #06b6d4, #2563eb, #1e40af);
+  box-shadow: 0 10px 40px -20px rgba(6, 182, 212, 0.4);
+}
+
+.card-emergency {
+  background: linear-gradient(to bottom right, #f97316, #ef4444, #be123c);
+  box-shadow: 0 10px 40px -20px rgba(239, 68, 68, 0.4);
+}
+
+.card-doctors {
+  background: linear-gradient(to bottom right, #2563eb, #4f46e5, #6d28d9);
+  box-shadow: 0 10px 40px -20px rgba(79, 70, 229, 0.4);
+}
