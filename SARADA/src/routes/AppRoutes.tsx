@@ -26,6 +26,7 @@ import {
  VisitData,
  BedBookingData,
  BedUpdateData,
+ ClinicalData,
 } from "../shared/types";
 
 
@@ -70,7 +71,7 @@ interface AppRouterProps {
   addAppointment: (a: Appointment) => void;
   deleteAppointment: (id: string) => void;
   updateAppointment: (id: string, updates: AppointmentUpdate) => void;
-  completeVisit: (id: string, data: VisitData) => void;
+  completeVisit: (id: string, data: ClinicalData) => void;
   handleBookBed: (id: string, data: BedBookingData) => void;
   handleReserveBed: (id: string, name: string) => void;
   handleReleaseBed: (id: string) => void;

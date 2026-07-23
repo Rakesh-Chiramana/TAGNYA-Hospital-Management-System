@@ -55,6 +55,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, size = 
         aria-modal="true"
         aria-labelledby={titleId}
         className={`modal-content ${sizeClasses[size]} animate-scale-in`}
+        style={{
+          width: "95vw",
+          maxWidth: "1280px",
+        }}
       >
         {!hideHeader && (
           <div className="modal-header">
