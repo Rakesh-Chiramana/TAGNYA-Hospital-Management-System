@@ -8,11 +8,11 @@ import {
   Phone,
   Info,
 } from "../utils/icons";
-import { Patient } from "../types";
+import { Doctor, Patient } from "../types";
 
 interface Props {
   patients: Patient[];
-  doctors?: any[];
+  doctors?: Doctor[];
 }
 
 const VisitorSearch: React.FC<Props> = ({ patients, doctors = [] }) => {

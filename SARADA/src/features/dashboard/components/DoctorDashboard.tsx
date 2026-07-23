@@ -11,17 +11,16 @@ import {
 } from "../../../shared/utils/icons";
 import Modal from "../../../shared/components/Modal";
 import LabReport from "../../../shared/components/LabReport";
-import { Patient } from "../../../shared/types";
-
+import { Patient, Appointment, Doctor, LabTest } from "../../../shared/types";
 interface DoctorDashboardProps {
-  doctorAppointments: any[];
-  waitingList: any[];
+  doctorAppointments: Appointment[];
+  waitingList: Patient[];
   doctorPatients: Patient[];
-  currentDoctor: any;
+  currentDoctor: Doctor | null;
   onUpdateDoctorStatus?: (id: string, status: string) => void;
   currentDoctorName: string;
-  notify: (msg: string, type: string) => void;
-  doctorLabTests: any[];
+  notify: (msg: string, type: "success" | "info" | "error") => void;
+  doctorLabTests: LabTest[];
   patients: Patient[];
 }
 
@@ -36,7 +35,7 @@ const DoctorDashboard: React.FC<DoctorDashboardProps> = ({
   doctorLabTests,
   patients,
 }) => {
-  const [selectedReport, setSelectedReport] = useState<any>(null);
+  const [selectedReport, setSelectedReport] = useState<LabTest | null>(null);
 
   return (
     <div className="space-y-10">
@@ -100,7 +99,10 @@ const DoctorDashboard: React.FC<DoctorDashboardProps> = ({
             value={currentDoctor?.status || "Available"}
             onChange={(e) =>
               currentDoctor &&
-              onUpdateDoctorStatus?.(currentDoctor.id, e.target.value)
+              onUpdateDoctorStatus?.(
+                String(currentDoctor.id),
+               e.target.value
+              )
             }
             className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-[10px] font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-hospital-blue"
           >
@@ -274,7 +276,7 @@ const DoctorDashboard: React.FC<DoctorDashboardProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {doctorLabTests.length > 0 ? (
-            doctorLabTests.map((report: any) => (
+            doctorLabTests.map((report: LabTest) => (
               <div
                 key={report.id}
                 className="group p-6 bg-slate-50 rounded-[2.5rem] border border-slate-100 hover:border-purple-200 hover:bg-white hover:shadow-xl transition-all duration-300 relative overflow-hidden"

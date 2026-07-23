@@ -1,12 +1,12 @@
 import React from "react";
 import Modal from "../../../shared/components/Modal";
 import { User, Stethoscope, Activity, Calendar, Bed, ClipboardList } from "../../../shared/utils/icons";
-import { Patient } from "../../../shared/types";
+import { Patient,  Invoice } from "../../../shared/types";
 
 interface DashboardModalsProps {
   showAllInvoicesModal: boolean;
   setShowAllInvoicesModal: (val: boolean) => void;
-  invoices: any[];
+  invoices: Invoice[];
   showAllPatientsModal: "IP" | "OP" | "ALL" | null;
   setShowAllPatientsModal: (val: "IP" | "OP" | "ALL" | null) => void;
   patients: Patient[];

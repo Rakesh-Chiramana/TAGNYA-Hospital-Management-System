@@ -7,7 +7,7 @@
   justify-content: center;
   padding: 1rem;
   background-color: rgba(6, 40, 78, 0.4);
-  backdrop-filter: blur(12px);
+ 
 }
 
 .modal-content {
@@ -98,6 +98,6 @@
 
   .modal-overlay {
     background: none !important;
-    backdrop-filter: none !important;
+    
   }
 }

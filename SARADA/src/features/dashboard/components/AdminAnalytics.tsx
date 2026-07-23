@@ -2,11 +2,24 @@ import React from "react";
 import { Bed, Users, TrendingUp, User, IndianRupee, Pill, FlaskConical } from "../../../shared/utils/icons";
 import { Patient } from "../../../shared/types";
 
+interface RevenueStats {
+  consultation: number;
+  pharmacy: number;
+  lab: number;
+  ipd: number;
+}
+
+interface AnalyticsInvoice {
+  id: string;
+  name: string;
+  amount: string;
+  status: "Paid" | "Pending" | "Cancelled" | string;
+}
 interface AdminAnalyticsProps {
   patients: Patient[];
   setShowAllPatientsModal: (type: "IP" | "OP" | "ALL") => void;
-  revenueStats: any;
-  invoices: any[];
+  revenueStats: RevenueStats;
+  invoices: AnalyticsInvoice[];
   setShowAllInvoicesModal: (val: boolean) => void;
   setSelectedProfile: (p: Patient) => void;
 }

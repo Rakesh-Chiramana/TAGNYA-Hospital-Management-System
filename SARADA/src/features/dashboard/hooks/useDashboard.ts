@@ -1,5 +1,13 @@
 import { useState, useMemo } from "react";
-import { UserRole, Patient, Appointment, Invoice, Doctor } from "../../../shared/types";
+import { 
+  UserRole, 
+  Patient, 
+  Appointment, 
+  Invoice, 
+  Doctor,
+  LabTest
+} from "../../../shared/types";
+
 
 export interface Props {
   onVisitorSearch: () => void;
@@ -12,7 +20,7 @@ export interface Props {
   doctors?: Doctor[];
   onUpdateDoctorStatus?: (doctorId: string, status: string) => void;
   onRevenueReport?: () => void;
-  labTests?: any[];
+  labTests?: LabTest[];
 }
 
 export const useDashboard = ({

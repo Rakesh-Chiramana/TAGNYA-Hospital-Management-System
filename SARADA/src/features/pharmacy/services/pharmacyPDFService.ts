@@ -1,5 +1,5 @@
 import { jsPDF } from "jspdf";
-import { addProfessionalHeader, addProfessionalFooter, addSaradaHospitalHeader } from "../../../shared/utils/pdfHelper";
+import { addProfessionalFooter, addSaradaHospitalHeader } from "../../../shared/utils/pdfHelper";
 import hospitalLogo from "../../../assets/sarada_logo.png";
 import { PharmacyBill } from "./pharmacyService";
 
@@ -71,7 +71,7 @@ export const generatePharmacyReceiptPDF = (bill: PharmacyBill) => {
   doc.save(`${bill.id}_${bill.patientName.replace(/\s+/g, "_")}.pdf`);
 };
 
-export const generateBulkOrderPDF = (order: any) => {
+export const generateBulkOrderPDF = (order: unknown) => {
   const doc = new jsPDF();
   doc.text("Bulk Order Report", 20, 20);
   doc.save("bulk_order.pdf");

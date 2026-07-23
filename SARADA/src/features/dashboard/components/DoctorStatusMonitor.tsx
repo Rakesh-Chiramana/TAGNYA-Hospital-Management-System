@@ -1,7 +1,8 @@
 import React from "react";
+import { Doctor } from "../../../shared/types";
 
 interface DoctorStatusMonitorProps {
-  doctors: any[];
+  doctors: Doctor[];
 }
 
 const DoctorStatusMonitor: React.FC<DoctorStatusMonitorProps> = ({ doctors }) => {

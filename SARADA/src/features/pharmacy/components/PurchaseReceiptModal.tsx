@@ -3,12 +3,43 @@ import Modal from "../../../shared/components/Modal";
 import ReportLetterhead from "../../../shared/components/ReportLetterhead";
 import { Download } from "../../../shared/utils/icons";
 
+interface PurchaseItem {
+  name: string;
+  qty: number;
+  qtyFree?: number;
+  buyPrice?: number;
+  mrp?: number;
+  totalAmount?: number;
+}
+
+interface PurchaseBill {
+  id: string | number;
+  date?: string;
+  time?: string;
+  vendor?: string;
+  invoiceNo?: string;
+  billNo?: string;
+  paymentMode?: string;
+  gstNo?: string;
+  vendorGstNo?: string;
+  dlNo?: string;
+  vendorDlNo?: string;
+
+  items: PurchaseItem[];
+
+  subtotal?: number;
+  gstTotal?: number;
+  paidAmount?: number;
+  balance?: number;
+  total?: number;
+}
+
 interface PurchaseReceiptModalProps {
   isOpen: boolean;
   onClose: () => void;
-  latestBulkOrderBill: any;
+  latestBulkOrderBill: PurchaseBill;
   hospitalLogo: string;
-  onReprint: (bill: any) => void;
+  onReprint: (bill: PurchaseBill) => void;
 }
 
 const PurchaseReceiptModal: React.FC<PurchaseReceiptModalProps> = ({
@@ -77,7 +108,7 @@ const PurchaseReceiptModal: React.FC<PurchaseReceiptModalProps> = ({
               </tr>
             </thead>
             <tbody>
-              {latestBulkOrderBill.items.map((item: any, i: number) => (
+              {latestBulkOrderBill.items.map((item: PurchaseItem, i: number) => (
                 <tr key={i} className="border-b border-slate-100">
                   <td className="px-2 py-2 text-slate-400">{i + 1}</td>
                   <td className="px-2 py-2 font-bold">{item.name}</td>

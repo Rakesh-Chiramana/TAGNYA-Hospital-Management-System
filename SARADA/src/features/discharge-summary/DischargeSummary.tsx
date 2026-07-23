@@ -1,17 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import "./styles/discharge-summary.css";
+import type { LucideIcon } from "lucide-react";
 import {
-  FileText,
   Plus,
   Download,
   Edit,
   Search,
   User,
-  Calendar,
   Activity,
   ClipboardList,
   Pill,
-  Clock,
   Heart,
   Thermometer,
   Droplets,
@@ -19,12 +17,51 @@ import {
   CheckCircle2,
 } from "../../shared/utils/icons";
 import Modal from "../../shared/components/Modal";
-import { DischargeSummary as DischargeSummaryType, UserRole } from "../../shared/types";
+import { DischargeSummary as DischargeSummaryType, Patient, UserRole } from "../../shared/types";
 import { useDischargeSummary } from "./hooks/useDischargeSummary";
 
+type VitalKey = keyof DischargeSummaryType["vitals"];
+interface VitalConfig {
+  label: string;
+  field: VitalKey;
+  icon: LucideIcon;
+}
+
+const vitals: VitalConfig[] = [
+ {
+  label:"Temp (°F)",
+  field:"temp",
+  icon:Thermometer
+ },
+ {
+  label:"Pulse",
+  field:"pulse",
+  icon:Activity
+ },
+ {
+  label:"BP",
+  field:"bp",
+  icon:Heart
+ },
+ {
+  label:"Resp",
+  field:"resp",
+  icon:Droplets
+ },
+ {
+  label:"SpO2 (%)",
+  field:"spo2",
+  icon:Activity
+ },
+ {
+  label:"Condition",
+  field:"condition",
+  icon:ClipboardList
+ }
+];
 interface Props {
   summaries: DischargeSummaryType[];
-  patients: any[];
+  patients: Patient[];
   userRole: UserRole;
   onSave: (summary: DischargeSummaryType) => void;
 }
@@ -38,10 +75,6 @@ const DischargeSummary: React.FC<Props> = ({
   const {
     isModalOpen,
     setIsModalOpen,
-    editingSummary,
-    setEditingSummary,
-    searchQuery,
-    setSearchQuery,
     formData,
     setFormData,
     canEdit,
@@ -53,13 +86,21 @@ const DischargeSummary: React.FC<Props> = ({
     handleSave,
     handleEdit,
     generatePDF,
+    editingSummary,
+    setEditingSummary,
   } = useDischargeSummary({ onSave, patients, userRole });
+    const [searchQuery, setSearchQuery] = useState(""); 
 
-  const filteredSummaries = summaries.filter(
-    (s) =>
-      s.patientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      s.patientId.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredSummaries = (summaries ?? []).filter(
+  (s) =>
+    (s.patientName ?? "")
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase()) ||
+    (s.patientId ?? "")
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
+);
+  
 
   return (
     <div className="discharge-summary-container">
@@ -76,8 +117,8 @@ const DischargeSummary: React.FC<Props> = ({
         {canEdit && (
           <button
             onClick={() => {
-              setFormData(emptySummary);
-              setEditingSummary(null);
+              setFormData({ ...emptySummary });
+              setEditingSummary(null); 
               setIsModalOpen(true);
             }}
             className="px-8 py-5 bg-slate-900 text-white rounded-[2rem] text-xs font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-2xl flex items-center space-x-3"
@@ -169,7 +210,11 @@ const DischargeSummary: React.FC<Props> = ({
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingSummary ? "Edit Discharge Summary" : "Generate Discharge Summary"}
+        title={
+  editingSummary !== null
+    ? "Edit Discharge Summary"
+    : "Generate Discharge Summary"
+}
         size="2xl"
       >
         <form onSubmit={handleSave} className="discharge-modal-content space-y-8 max-h-[80vh] overflow-y-auto px-4 custom-scrollbar">
@@ -181,14 +226,14 @@ const DischargeSummary: React.FC<Props> = ({
                 <select
                   className=""
                   name="patientId"
-                  value={formData.patientId}
+                  value={String(formData.patientId ?? "")}
                   onChange={handlePatientChange}
                   required
                 >
                   <option value="">Choose Patient...</option>
                   {patientList.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.patient_name || p.name} ({p.id})
+                    <option key={String(p.id)} value={String(p.id)}>
+                      {p.name} ({p.id})
                     </option>
                   ))}
                 </select>
@@ -247,26 +292,39 @@ const DischargeSummary: React.FC<Props> = ({
                   Observations at Discharge
                 </div>
                 <div className="discharge-grid-3">
-                  {[
-                    { label: "Temp (°F)", field: "temp", icon: Thermometer },
-                    { label: "Pulse", field: "pulse", icon: Activity },
-                    { label: "BP", field: "bp", icon: Heart },
-                    { label: "Resp", field: "resp", icon: Droplets },
-                    { label: "SpO2 (%)", field: "spo2", icon: Activity },
-                    { label: "Condition", field: "condition", icon: ClipboardList },
-                  ].map((vital) => (
-                    <div key={vital.field} className="discharge-input-group">
-                      <label>{vital.label}</label>
-                      <input
-                        type="text"
-                        value={(formData.vitals as any)[vital.field]}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          vitals: { ...formData.vitals, [vital.field]: e.target.value }
-                        })}
-                      />
-                    </div>
-                  ))}
+                  {vitals.map((vital) => {
+  const Icon = vital.icon;
+
+  return (
+    <div key={vital.field} className="discharge-input-group">
+
+      <div className="flex items-center gap-2 mb-2">
+        <Icon className="w-4 h-4 text-blue-600" />
+        <label>{vital.label}</label>
+      </div>
+
+      <input
+        type="text"
+        value={formData.vitals[vital.field] || ""}
+        onChange={(e) =>
+          setFormData({
+            ...formData,
+            vitals: {
+              temp: formData.vitals.temp,
+              pulse: formData.vitals.pulse,
+              bp: formData.vitals.bp,
+              resp: formData.vitals.resp,
+              spo2: formData.vitals.spo2,
+              condition: formData.vitals.condition,
+              [vital.field]: e.target.value,
+            }
+          })
+        }
+      />
+
+    </div>
+  );
+})}
                 </div>
               </div>
 
@@ -300,7 +358,7 @@ const DischargeSummary: React.FC<Props> = ({
                   </button>
                 </div>
                 <div className="space-y-4">
-                  {formData.medications.map((med, idx) => (
+                  {(formData.medications ?? []).map((med, idx) => (
                     <div key={idx} className="grid grid-cols-4 gap-4 p-4 bg-white border border-slate-100 rounded-2xl shadow-sm">
                       <input
                         placeholder="Medicine"

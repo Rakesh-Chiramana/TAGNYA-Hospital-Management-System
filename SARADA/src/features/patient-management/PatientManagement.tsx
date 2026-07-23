@@ -9,7 +9,7 @@ import {
   Trash2,
 } from "../../shared/utils/icons";
 import Modal from "../../shared/components/Modal";
-import { Patient, Appointment, Invoice } from "../../shared/types";
+import { Patient, Appointment, Invoice, Doctor } from "../../shared/types";
 import { usePatientManagement } from "./services/patientService";
 import PatientData from "./data/patientMockData.json";
 
@@ -19,13 +19,17 @@ import PrescriptionModal from "./components/PrescriptionModal";
 import RegistrationModal from "./components/RegistrationModal";
 import AdmissionReceiptModal from "./components/AdmissionReceiptModal";
 
-const DOCTOR_FEES = (PatientData as any).DOCTOR_FEES as Record<string, number> || {};
+interface PatientDataType {
+  DOCTOR_FEES: Record<string, number>;
+}
+
+const DOCTOR_FEES = (PatientData as PatientDataType).DOCTOR_FEES as Record<string, number> || {};
 
 interface Props {
   patients: Patient[];
   appointments: Appointment[];
   invoices: Invoice[];
-  doctors: any[];
+  doctors: Doctor[];
   onAddPatient: (p: Patient) => void;
   onDeletePatient: (id: string) => void;
   onAddInvoice: (i: Invoice) => void;

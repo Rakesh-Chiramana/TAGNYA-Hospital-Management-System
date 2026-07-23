@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import "./styles/pharmacy.css";
 import { History, Zap } from "../../shared/utils/icons";
 import Modal from "../../shared/components/Modal";
-import { Patient, UserRole, Invoice } from "../../shared/types";
+import { Patient, UserRole, Invoice, Doctor, LabTest, } from "../../shared/types";
 import { usePharmacyLogic } from "./services/pharmacyService";
 import hospitalLogo from "../../assets/sarada_logo.png";
 
@@ -55,15 +55,17 @@ interface Props {
   onAddInvoice?: (i: Invoice) => void;
   userRole?: UserRole;
   patients?: Patient[];
-  doctors?: any[];
-  labTests?: any[];
-  setLabTests?: React.Dispatch<React.SetStateAction<any[]>>;
+  doctors?: Doctor[];
+  labTests?: LabTest[];
+  setLabTests?: React.Dispatch<React.SetStateAction<LabTest[]>>;
 }
 
 const PharmacyModule: React.FC<Props> = ({
   onAddInvoice,
   userRole,
   patients = [],
+  doctors = [],
+  labTests = [],
 }) => {
   const {
     isReplenishModalOpen, setIsReplenishModalOpen,

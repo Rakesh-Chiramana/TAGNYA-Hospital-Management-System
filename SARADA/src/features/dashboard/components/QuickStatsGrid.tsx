@@ -1,16 +1,25 @@
 import React from "react";
-import { Patient } from "../../../shared/types";
+import { Patient, Doctor } from "../../../shared/types";
 import { UserPlus, Stethoscope, Zap, Users } from "../../../shared/utils/icons";
+
+type CardColor = "emerald" | "blue" | "rose" | "indigo";
 
 interface QuickStatsGridProps {
   patients: Patient[];
-  doctors: any[];
+  doctors: Doctor[];
 }
 
 const QuickStatsGrid: React.FC<QuickStatsGridProps> = ({ patients, doctors }) => {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      {[
+   const cards: {
+    label: string;
+    title: string;
+    count: string;
+    icon: React.ElementType;
+    color: CardColor;
+    desc: string;
+    extraBadge: string | null;
+  }[] = [
+  
         {
           label: "Registry",
           title: "Patient Identity",
@@ -49,8 +58,12 @@ const QuickStatsGrid: React.FC<QuickStatsGridProps> = ({ patients, doctors }) =>
             doctors.filter((d) => d.status === "In Surgery").length > 0
               ? `${doctors.filter((d) => d.status === "In Surgery").length} Busy`
               : null,
-        },
-      ].map((card, i) => {
+         },
+  ];
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {cards.map((card, i) => {
         const colors: Record<
           string,
           {

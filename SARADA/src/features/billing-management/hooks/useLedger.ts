@@ -1,4 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { ChargeDetails } from "../../../shared/types";
+
 
 const BASE = "http://localhost:5000";
 
@@ -13,7 +15,7 @@ export interface LedgerEntry {
   reference_id: string | null;
   payment_status: "Pending" | "Paid";
   created_at: string;
-  charges?: any; 
+  charges?: ChargeDetails;
 }
 
 export interface CreateLedgerPayload {
@@ -23,7 +25,7 @@ export interface CreateLedgerPayload {
   service_name: string;
   amount: number;
   reference_id?: string;
-  charges?: any;  
+  charges?: ChargeDetails;  
 }
 
 export const useLedger = () => {
@@ -43,8 +45,12 @@ export const useLedger = () => {
       if (data.success && Array.isArray(data.data)) {
         setEntries(data.data);
       }
-    } catch (err: any) {
-      setError(err.message || "Network error");
+    } catch (err: unknown) {
+      setError(
+      err instanceof Error
+      ? err.message
+      : "Network error"
+    );
     } finally {
       setLoading(false);
     }
@@ -54,7 +60,7 @@ export const useLedger = () => {
     fetchEntries();
   }, [fetchEntries]);
 
-  const createEntry = async (payload: CreateLedgerPayload): Promise<boolean> => {
+  const createEntry = useCallback(async (payload: CreateLedgerPayload): Promise<boolean> => {
     setSubmitting(true);
     try {
       const res = await fetch(`${BASE}/create`, {
@@ -69,15 +75,20 @@ export const useLedger = () => {
       }
       await fetchEntries();
       return true;
-    } catch (err: any) {
-      alert("Network error: " + err.message);
+    } catch (err: unknown) {
+      alert(
+       "Network error: " +
+        (err instanceof Error
+        ? err.message
+        : "Unknown error")
+      );
       return false;
     } finally {
       setSubmitting(false);
     }
-  };
+  }, []);
 
-  const markPaid = async (
+  const markPaid = useCallback(async (
     id: number,
     paymentMode: string,
     amount: number
@@ -99,25 +110,39 @@ export const useLedger = () => {
         )
       );
       return true;
-    } catch (err: any) {
-      alert("Network error: " + err.message);
+    } catch (err: unknown) {
+      alert(
+  "Network error: " +
+  (err instanceof Error ? err.message : "Unknown error")
+);
       return false;
     }
-  };
+  }, []);
 
-  const deleteEntry = (id: number) => {
+  const deleteEntry = useCallback((id: number) => {
     if (!window.confirm("Delete this ledger entry?")) return;
     setEntries((prev) => prev.filter((e) => e.id !== id));
-  };
+  }, []);
 
-  const filteredEntries =
-    filterStatus === "All"
-      ? entries
-      : entries.filter((e) => e.payment_status === filterStatus);
-
-  const totalRevenue = entries.reduce((acc, e) => acc + Number(e.amount), 0);
-  const pendingCount = entries.filter((e) => e.payment_status === "Pending").length;
-  const paidCount = entries.filter((e) => e.payment_status === "Paid").length;
+  const filteredEntries = useMemo(() => {
+  return filterStatus === "All"
+    ? entries
+    : entries.filter(
+        (e) => e.payment_status === filterStatus
+      );
+}, [entries, filterStatus]);
+  const totalRevenue = useMemo(() => {
+  return entries.reduce(
+    (acc, e) => acc + Number(e.amount),
+    0
+  );
+}, [entries]);
+  const paidCount = useMemo(() => {
+  return entries.filter((e) => e.payment_status === "Paid").length;
+}, [entries]);
+  const pendingCount = useMemo(() => {
+  return entries.filter((e) => e.payment_status === "Pending").length;
+}, [entries]);
 
   return {
     entries,

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { UserRole, Bed, Patient, Invoice, Appointment, Doctor, DischargeSummary as DischargeSummaryType, ClinicalData, LabTest } from "../types";
 import { mapStaffRoleToUserRole } from "../../features/login/utils/loginCredentials";
 
+
 export const useAppState = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   // Authentication state (do not persist in localStorage; rely on server/session)
@@ -39,7 +40,7 @@ export const useAppState = () => {
   // Shared state for lab tests
   const [labTests, setLabTests] = useState<LabTest[]>(() => []);
 
-  // Persistence Effects
+  // Persistence Effects 
   // No localStorage persistence: rely on backend DB as source of truth.
 
   // Fetch real data from MySQL database on mount

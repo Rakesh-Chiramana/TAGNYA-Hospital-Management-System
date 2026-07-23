@@ -226,12 +226,12 @@ const LedgerTable: React.FC<LedgerTableProps> = ({
                         )}
 
                         {/* Patient Report — only if linked patient */}
-                        {patient && (
+                        {patientObj && (
                           <button
                             onClick={() => generateMasterBill(patient, {
                               id: entry.id,
                               name: entry.patient_name,
-                              patientId: entry.patient_id ? Number(entry.patient_id) : null,
+                              patientId: entry.patient_id? String(entry.patient_id): "GUEST",                            
                               services: `${entry.department} - ${entry.service_name}`,
                               amount: `₹${Number(entry.amount).toFixed(0)}`,
                               date: entry.created_at ? new Date(entry.created_at).toLocaleDateString() : new Date().toLocaleDateString(),

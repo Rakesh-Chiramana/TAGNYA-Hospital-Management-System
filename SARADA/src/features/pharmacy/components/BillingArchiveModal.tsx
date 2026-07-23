@@ -2,25 +2,46 @@ import React, { useState } from "react";
 import Modal from "../../../shared/components/Modal";
 import { History, Receipt } from "../../../shared/utils/icons";
 import { generateBulkOrderPDF, generatePharmacyBillPDF } from "../services/pharmacyPDFService";
+import { PharmacyBill} from "../services/pharmacyService";
+
+
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  recentBills: any[];
-  stockBills: any[];
+  recentBills: PharmacyBill[];
+  stockBills: PharmacyBill[];
 }
+
+
 
 const BillingArchiveModal: React.FC<Props> = ({ isOpen, onClose, recentBills, stockBills }) => {
   const [billFilterTab, setBillFilterTab] = useState<"All" | "Sales" | "Procurement">("All");
   const [dateFilter, setDateFilter] = useState("");
 
-  const filteredBills = (billFilterTab === "All"
-    ? [...(recentBills || []).map(b => ({ ...b, billType: 'Sales' })), ...(stockBills || []).map(b => ({ ...b, billType: 'Procurement' }))]
+  const filteredBills: PharmacyBill[] =
+  billFilterTab === "All"
+    ? [
+        ...(recentBills || []).map((b) => ({
+          ...b,
+          billType: "Sales" as const,
+        })),
+        ...(stockBills || []).map((b) => ({
+          ...b,
+          billType: "Procurement" as const,
+        })),
+      ]
     : billFilterTab === "Sales"
-      ? (recentBills || []).map(b => ({ ...b, billType: 'Sales' }))
-      : (stockBills || []).map(b => ({ ...b, billType: 'Procurement' }))) || [];
+    ? (recentBills || []).map((b) => ({
+        ...b,
+        billType: "Sales" as const,
+      }))
+    : (stockBills || []).map((b) => ({
+        ...b,
+        billType: "Procurement" as const,
+      }));
 
-  const finalBills = filteredBills.filter((b: any) => !dateFilter || (b.date && b.date.includes(dateFilter.split("-").reverse().join("/"))));
+  const finalBills = filteredBills.filter((b: PharmacyBill) => !dateFilter || (b.date && b.date.includes(dateFilter.split("-").reverse().join("/"))));
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Pharmacy Billing Archives" size="xl">
@@ -45,7 +66,7 @@ const BillingArchiveModal: React.FC<Props> = ({ isOpen, onClose, recentBills, st
               <tr><th className="px-5 py-4">ID / Date</th><th className="px-5 py-4">Type</th><th className="px-5 py-4">Name</th><th className="px-5 py-4">Amount</th><th className="px-5 py-4 text-right">Action</th></tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
-              {finalBills.map((bill: any) => (
+              {finalBills.map((bill: PharmacyBill) => (
                 <tr key={bill.id} className="hover:bg-slate-50/50 transition-colors">
                   <td className="px-5 py-5 text-xs font-black text-slate-900">{bill.id}</td>
                   <td className="px-5 py-5"><span className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest ${bill.billType === "Sales" ? "bg-hospital-blue/10 text-hospital-blue" : "bg-blue-50 text-blue-600"}`}>{bill.billType}</span></td>

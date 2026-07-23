@@ -12,8 +12,37 @@ import DoctorManagement from "../features/doctor-management/DoctorManagement";
 import DischargeSummary from "../features/discharge-summary/DischargeSummary";
 import StaffManagement from "../features/staff-management/StaffManagement";
 import ExpenseModule from "../features/expense";
-import { Appointment, Bed, Doctor, Invoice, LabTest, Patient, UserRole } from "../shared/types";
+import {
+ Appointment,
+ Bed,
+ DischargeSummary as DischargeSummaryType,
+ Doctor,
+ Invoice,
+ LabTest,
+ Patient,
+ StaffMember,
+ UserRole,
+ AdmissionData,
+ VisitData,
+ BedBookingData,
+ BedUpdateData,
+} from "../shared/types";
 
+
+type AppTab =
+ | "dashboard"
+ | "patients"
+ | "appointments"
+ | "billing"
+ | "lab"
+ | "pharmacy"
+ | "bed-allocation"
+ | "doctors"
+ | "staff-management"
+ | "expense"
+ | "visitor-search"
+ | "discharge-summary";
+type AppointmentUpdate = Partial<Appointment>;
 interface AppRouterProps {
   activeTab: string;
   userRole: UserRole | null;
@@ -24,31 +53,31 @@ interface AppRouterProps {
   appointments: Appointment[];
   doctors: Doctor[];
   labTests: LabTest[];
-  setLabTests: (tests: any) => void;
-  staff: any[];
+  setLabTests: (tests: LabTest[]) => void;
+  staff: StaffMember[];
   loggedInStaffName: string | null;
-  dischargeSummaries: any[];
-  setActiveTab: (tab: string) => void;
-  setRegistrationRequest: (req: any) => void;
-  setStaff: (staff: any) => void;
-  setDoctors: (doctors: any) => void;
-  handleAddAdmission: (data: any) => void;
+  dischargeSummaries: DischargeSummaryType[];
+  setActiveTab: (tab: AppTab) => void;
+  setRegistrationRequest:(req:{doctorName:string}|null)=>void;
+  setStaff: (staff: StaffMember[]) => void;
+  setDoctors: (doctors: Doctor[]) => void;
+  handleAddAdmission: (data: AdmissionData) => void;
   updateDoctorStatus: (id: string, status: string) => void;
-  addPatient: (p: any) => void;
+  addPatient: (p: Patient) => void;
   deletePatient: (id: string) => void;
-  addInvoice: (i: any) => void;
+  addInvoice: (i: Invoice) => void;
   deleteInvoice: (id: string) => void;
-  addAppointment: (a: any) => void;
+  addAppointment: (a: Appointment) => void;
   deleteAppointment: (id: string) => void;
-  updateAppointment: (id: string, updates: any) => void;
-  completeVisit: (id: string, data: any) => void;
-  handleBookBed: (id: string, data: any) => void;
+  updateAppointment: (id: string, updates: AppointmentUpdate) => void;
+  completeVisit: (id: string, data: VisitData) => void;
+  handleBookBed: (id: string, data: BedBookingData) => void;
   handleReserveBed: (id: string, name: string) => void;
   handleReleaseBed: (id: string) => void;
-  handleAddBed: (data: any) => void;
-  handleUpdateBed: (id: string, updates: any) => void;
+  handleAddBed: (data: BedUpdateData) => void;
+  handleUpdateBed: (id: string, updates: BedUpdateData) => void;
   handleBookSlot: (name: string) => void;
-  saveDischargeSummary: (s: any) => void;
+  saveDischargeSummary: (s: DischargeSummaryType) => void;
   onRevenueReport: () => void;
 }
 

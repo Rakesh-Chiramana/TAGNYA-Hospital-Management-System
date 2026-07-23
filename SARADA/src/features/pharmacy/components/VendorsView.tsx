@@ -6,7 +6,7 @@ interface VendorsViewProps {
   vendors: Vendor[];
   onAddVendor: (vendor: Partial<Vendor>) => void;
   onToggleVendorStatus: (id: string) => void;
-  setPharmacyView: (view: any) => void;
+  setPharmacyView: (view: "dashboard" | "vendors") => void;
 }
 
 const VendorsView: React.FC<VendorsViewProps> = ({
