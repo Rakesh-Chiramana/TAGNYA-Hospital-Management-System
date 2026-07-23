@@ -52,6 +52,7 @@ const mappedInvoices: Invoice[] = useMemo(() => {
     services: `${e.department} - ${e.service_name}`,
     amount: `₹${Number(e.amount).toFixed(0)}`,
     status: e.payment_status,
+    paymentMethod: e.payment_mode || "N/A",
     date: e.created_at
       ? new Date(e.created_at).toLocaleDateString()
       : new Date().toLocaleDateString(),

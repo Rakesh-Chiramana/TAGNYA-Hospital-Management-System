@@ -14,6 +14,7 @@ export interface LedgerEntry {
   amount: number;
   reference_id: string | null;
   payment_status: "Pending" | "Paid";
+  payment_mode?: string;
   created_at: string;
   charges?: ChargeDetails;
 }

@@ -40,6 +40,12 @@ const BillingModals: React.FC<BillingModalsProps> = ({
   beds,
   onDeleteInvoice,
 }) => {
+  const isBedInvoice = (invoice: Invoice) => {
+    const searchableText = `${invoice.id} ${invoice.department || ""} ${invoice.services || ""}`.toLowerCase();
+    const amount = Number(String(invoice.amount || "").replace(/[^0-9.-]/g, "")) || 0;
+    return amount > 0 && (invoice.id.startsWith("BD") || /bed|room|ward|inpatient|ip charge/.test(searchableText));
+  };
+
   return (
     <>
       {/* Invoice Details Form Modal */}
@@ -317,7 +323,7 @@ const BillingModals: React.FC<BillingModalsProps> = ({
             <div className="px-6 py-3 bg-slate-50 rounded-2xl border border-slate-100 flex items-center space-x-3">
               <Activity className="w-4 h-4 text-hospital-blue" />
               <span className="text-[10px] font-black text-slate-900 uppercase">
-                {invoices.filter((inv) => inv.id.startsWith("BD")).length} Bed
+                {invoices.filter(isBedInvoice).length} Bed
                 Invoices Sync'd
               </span>
             </div>
@@ -339,7 +345,7 @@ const BillingModals: React.FC<BillingModalsProps> = ({
               </thead>
               <tbody className="divide-y divide-slate-50">
                 {invoices
-                  .filter((inv) => inv.id.startsWith("BD"))
+                  .filter(isBedInvoice)
                   .map((inv) => (
                     <tr
                       key={inv.id}
@@ -405,7 +411,7 @@ const BillingModals: React.FC<BillingModalsProps> = ({
                       <td className="px-8 py-6 text-right">
                         <div className="flex justify-end space-x-2">
                           <button
-                          onClick={() => {
+                          onClick={async () => {
   if (!inv.charges) {
     alert("This invoice was created before detailed billing was saved — can't reprint the full breakdown.");
     return;
@@ -433,12 +439,26 @@ const BillingModals: React.FC<BillingModalsProps> = ({
     amount: bc.amount,
   }));
 
-  const pharmacyItems = (c.pharmacyCharges || []).map((p: any) => ({
+  let pharmacyItems = (c.pharmacyCharges || []).map((p: any) => ({
     medicine_name: p.medicine,
     qty: p.quantity,
     mrp: p.rate,
     total: p.amount,
   }));
+
+  if (pharmacyItems.length === 0) {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/sales/items?patientId=${encodeURIComponent(inv.patientId)}&patientName=${encodeURIComponent(inv.name)}`
+      );
+      const data = await response.json();
+      if (data.success && Array.isArray(data.items)) {
+        pharmacyItems = data.items;
+      }
+    } catch (error) {
+      console.error("Failed to load pharmacy items for bed bill:", error);
+    }
+  }
 
   const pharmacyChargeTotal = pharmacyItems.reduce(
     (sum: number, p: any) => sum + p.total, 0
