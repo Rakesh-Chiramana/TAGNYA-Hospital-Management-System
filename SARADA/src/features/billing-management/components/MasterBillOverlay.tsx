@@ -67,6 +67,11 @@ const MasterBillOverlay: React.FC<Props> = ({
     const patientName = selectedPatientBill.patient?.name || "";
     let ipNo = "";
 
+    if (selectedPatientBill.reportType !== "bed" && selectedPatientBill.reportType !== "pharmacy") {
+      setDbPharmacyItems([]);
+      return;
+    }
+
     // Resolve ipNo from backend (DB) instead of scanning client localStorage
     const resolveIpNo = async () => {
       if (!patientId) return;
@@ -108,9 +113,12 @@ const MasterBillOverlay: React.FC<Props> = ({
 
   if (!selectedPatientBill) return null;
 
-  const { patient, bed, days, bedCharge, items, chargesBreakdown } = selectedPatientBill;
+  const { patient, bed, days, bedCharge, items, chargesBreakdown, reportType, paymentMethod } = selectedPatientBill;
 
-  const useBreakdown = !!chargesBreakdown;
+  const useBreakdown = !reportType && !!chargesBreakdown;
+  const showBed = !reportType || reportType === "bed";
+  const showPharmacy = !reportType || reportType === "bed" || reportType === "pharmacy";
+  const showAdditionalCharges = !reportType || reportType === "bed";
 
 const breakdownBedRows = useBreakdown
   ? chargesBreakdown!.bedCharges.map(bc => ({
@@ -139,6 +147,9 @@ const breakdownMisc = useBreakdown ? chargesBreakdown!.miscCharge : 0;
 const breakdownDiscount = useBreakdown ? chargesBreakdown!.discount : 0;
 const breakdownSubtotal = useBreakdown ? chargesBreakdown!.subtotal : 0;
 const breakdownTotal = useBreakdown ? chargesBreakdown!.total : 0;
+const reportNursing = reportType === "bed" ? chargesBreakdown?.nursingCharge || 0 : breakdownNursing;
+const reportMisc = reportType === "bed" ? chargesBreakdown?.miscCharge || 0 : breakdownMisc;
+const reportDiscount = reportType === "bed" ? chargesBreakdown?.discount || 0 : breakdownDiscount;
 
   const invoiceNo = `INV-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 90000)}`;
   const issuedDate = new Date().toLocaleDateString("en-IN", {
@@ -154,19 +165,19 @@ const breakdownTotal = useBreakdown ? chargesBreakdown!.total : 0;
   // Separate bed charges and other items
   const bedItems = items.filter(item => {
     const desc = (item.description || "").toLowerCase();
-    return desc.includes("bed") || desc.includes("room") || desc.includes("ward");
+    return reportType === "bed" || (!reportType && (desc.includes("bed") || desc.includes("room") || desc.includes("ward")));
   });
 
   const otherItems = items.filter(item => {
     const desc = (item.description || "").toLowerCase();
-    return !desc.includes("bed") && !desc.includes("room") && !desc.includes("ward") &&
-      !desc.includes("pharma") && !desc.includes("medicine") && !desc.includes("drug");
+    return reportType === "consultation" || (!reportType && !desc.includes("bed") && !desc.includes("room") && !desc.includes("ward") &&
+      !desc.includes("pharma") && !desc.includes("medicine") && !desc.includes("drug"));
   });
 
   // Calculate Pharmacy total: preference to database actual pharmacy items if loaded, else fallback to ledger items
   const ledgerPharmacyItems = items.filter(item => {
     const desc = (item.description || "").toLowerCase();
-    return desc.includes("pharma") && !desc.includes("bed") && !desc.includes("room");
+    return reportType === "pharmacy" || (!reportType && desc.includes("pharma") && !desc.includes("bed") && !desc.includes("room"));
   });
 
   const pharmacyTotal = dbPharmacyItems.length > 0
@@ -174,9 +185,11 @@ const breakdownTotal = useBreakdown ? chargesBreakdown!.total : 0;
     : ledgerPharmacyItems.reduce((sum, item) => sum + item.amount, 0);
 
   // Recalculate Subtotal based on bed charge + pharmacy total + other items
-  const rawBedCharge = bedItems.length > 0
-    ? bedItems.reduce((sum, item) => sum + item.amount, 0)
-    : (bed ? (days || 1) * (bedCharge || bed.chargePerDay || 0) : 0);
+  const rawBedCharge = reportType === "consultation" || reportType === "pharmacy"
+    ? 0
+    : bedItems.length > 0
+      ? bedItems.reduce((sum, item) => sum + item.amount, 0)
+      : (bed ? (days || 1) * (bedCharge || bed.chargePerDay || 0) : 0);
 
   const calculatedBedCharge = bedItems.length > 0
     ? Math.max(0, rawBedCharge - pharmacyTotal)
@@ -187,11 +200,11 @@ const breakdownTotal = useBreakdown ? chargesBreakdown!.total : 0;
   calculatedBedCharge +
   pharmacyTotal +
   otherTotal +
-  breakdownNursing +
-  breakdownMisc;
+  reportNursing +
+  reportMisc;
 
   const finalTotal =
-  subtotal - breakdownDiscount;
+  subtotal - reportDiscount;
 
   const handlePrint = () => {
   // Build bed charge rows
@@ -232,8 +245,8 @@ const breakdownTotal = useBreakdown ? chargesBreakdown!.total : 0;
   }
 
   // Discount row (only if breakdown present and discount > 0)
-  const discountRow = (useBreakdown && breakdownDiscount > 0)
-    ? `<tr><td><b>Discount</b></td><td>—</td><td>—</td><td>-₹${Number(breakdownDiscount).toFixed(2)}</td></tr>`
+  const discountRow = (showAdditionalCharges && reportDiscount > 0)
+    ? `<tr><td><b>Discount</b></td><td>—</td><td>—</td><td>-₹${Number(reportDiscount).toFixed(2)}</td></tr>`
     : '';
 
   // Other items as misc
@@ -245,8 +258,8 @@ const breakdownTotal = useBreakdown ? chargesBreakdown!.total : 0;
   const finalSubtotal = useBreakdown ? breakdownSubtotal : subtotal;
   const finalGrandTotal = useBreakdown ? breakdownTotal : finalTotal;
   const finalPharmacyTotal = useBreakdown ? breakdownPharmacyTotal : pharmacyTotal;
-  const finalNursing = useBreakdown ? breakdownNursing : 0;
-  const finalMisc = useBreakdown ? breakdownMisc : 0;
+  const finalNursing = useBreakdown ? breakdownNursing : reportNursing;
+  const finalMisc = useBreakdown ? breakdownMisc : reportMisc;
 
   const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Discharge Invoice</title><style>${PRINT_STYLES}</style></head><body>
     <div class="header">
@@ -276,12 +289,10 @@ const breakdownTotal = useBreakdown ? chargesBreakdown!.total : 0;
       <table>
         <thead><tr><th>DESCRIPTION</th><th>QTY</th><th>RATE</th><th>AMOUNT</th></tr></thead>
         <tbody>
-          ${bedRows}
-          <tr><td><b>Pharmacy charge</b></td><td>—</td><td>—</td><td>₹${Number(finalPharmacyTotal).toFixed(2)}</td></tr>
-          ${pharmaSubRows}
-          <tr><td><b>Nursing charge</b></td><td>—</td><td>—</td><td>₹${Number(finalNursing).toFixed(2)}</td></tr>
-          <tr><td><b>Miscellaneous charge</b></td><td>—</td><td>—</td><td>₹${Number(finalMisc).toFixed(2)}</td></tr>
-          ${discountRow}
+          ${showBed ? bedRows : ''}
+          ${showPharmacy ? `<tr><td><b>Pharmacy charge</b></td><td>—</td><td>—</td><td>₹${Number(finalPharmacyTotal).toFixed(2)}</td></tr>${pharmaSubRows}` : ''}
+          ${showAdditionalCharges ? `<tr><td><b>Nursing charge</b></td><td>—</td><td>—</td><td>₹${Number(finalNursing).toFixed(2)}</td></tr><tr><td><b>Miscellaneous charge</b></td><td>—</td><td>—</td><td>₹${Number(finalMisc).toFixed(2)}</td></tr>${discountRow}` : ''}
+          ${showAdditionalCharges ? `<tr><td><b>Payment mode</b></td><td>—</td><td>—</td><td>${paymentMethod || 'N/A'}</td></tr>` : ''}
           ${otherRows}
         </tbody>
       </table>
@@ -399,7 +410,7 @@ const breakdownTotal = useBreakdown ? chargesBreakdown!.total : 0;
           </thead>
           <tbody className="divide-y divide-slate-100">
   {/* Bed charge rows */}
-  {useBreakdown ? (
+  {showBed && (useBreakdown ? (
     breakdownBedRows.map((row, idx) => (
       <tr key={`bd-${idx}`}>
         <td className="px-4 py-3 font-bold text-slate-800">Bed charge ({row.wardType})</td>
@@ -426,18 +437,18 @@ const breakdownTotal = useBreakdown ? chargesBreakdown!.total : 0;
       <td className="px-4 py-3 text-center text-slate-600">₹{Number(bedCharge || bed.chargePerDay || 0).toFixed(2)}</td>
       <td className="px-4 py-3 text-right font-bold text-slate-800">₹{Number((days || 1) * (bedCharge || bed.chargePerDay || 0)).toFixed(2)}</td>
     </tr>
-  ) : null}
+  ) : null)}
 
             {/* Pharmacy charge */}
-            <tr>
+            {showPharmacy && <tr>
               <td className="px-4 py-3 font-bold text-slate-800">Pharmacy charge</td>
               <td className="px-4 py-3 text-center text-slate-500">—</td>
               <td className="px-4 py-3 text-center text-slate-500">—</td>
                             <td className="px-4 py-3 text-right font-bold text-slate-800">₹{Number(useBreakdown ? breakdownPharmacyTotal : pharmacyTotal).toFixed(2)}</td>
 
-            </tr>
+            </tr>}
             {/* Pharmacy sub-items */}
-            {dbPharmacyItems.length > 0 ? dbPharmacyItems.map((item, idx) => (
+            {showPharmacy && (dbPharmacyItems.length > 0 ? dbPharmacyItems.map((item, idx) => (
               <tr key={`pharma-${idx}`}>
                 <td className="px-4 py-2 text-slate-500 text-[10px] pl-7">{item.medicine_name || item.name}</td>
                 <td className="px-4 py-2 text-center text-slate-500 text-[10px]">
@@ -455,15 +466,15 @@ const breakdownTotal = useBreakdown ? chargesBreakdown!.total : 0;
                 <td className="px-4 py-2 text-center text-slate-400 text-[10px]"></td>
                 <td className="px-4 py-2 text-right text-slate-400 text-[10px]"></td>
               </tr>
-            ))}
+            )))}
 
-           
+           {showAdditionalCharges && <>
            {/* Nursing charge */}
             <tr>
               <td className="px-4 py-3 font-bold text-slate-800">Nursing charge</td>
               <td className="px-4 py-3 text-center text-slate-500">—</td>
               <td className="px-4 py-3 text-center text-slate-500">—</td>
-              <td className="px-4 py-3 text-right font-bold text-slate-800">₹{Number(breakdownNursing).toFixed(2)}</td>
+              <td className="px-4 py-3 text-right font-bold text-slate-800">₹{Number(reportNursing).toFixed(2)}</td>
             </tr>
 
             {/* Miscellaneous charge */}
@@ -471,16 +482,26 @@ const breakdownTotal = useBreakdown ? chargesBreakdown!.total : 0;
               <td className="px-4 py-3 font-bold text-slate-800">Miscellaneous charge</td>
               <td className="px-4 py-3 text-center text-slate-500">—</td>
               <td className="px-4 py-3 text-center text-slate-500">—</td>
-              <td className="px-4 py-3 text-right font-bold text-slate-800">₹{Number(breakdownMisc).toFixed(2)}</td>
+              <td className="px-4 py-3 text-right font-bold text-slate-800">₹{Number(reportMisc).toFixed(2)}</td>
             </tr>
+            </>}
 
             {/* Discount */}
-            {useBreakdown && breakdownDiscount > 0 && (
+            {showAdditionalCharges && reportDiscount > 0 && (
               <tr>
                 <td className="px-4 py-3 font-bold text-slate-800">Discount</td>
                 <td className="px-4 py-3 text-center text-slate-500">—</td>
                 <td className="px-4 py-3 text-center text-slate-500">—</td>
-                <td className="px-4 py-3 text-right font-bold text-red-600">-₹{Number(breakdownDiscount).toFixed(2)}</td>
+                <td className="px-4 py-3 text-right font-bold text-red-600">-₹{Number(reportDiscount).toFixed(2)}</td>
+              </tr>
+            )}
+
+            {showAdditionalCharges && (
+              <tr>
+                <td className="px-4 py-3 font-bold text-slate-800">Payment mode</td>
+                <td className="px-4 py-3 text-center text-slate-500">—</td>
+                <td className="px-4 py-3 text-center text-slate-500">—</td>
+                <td className="px-4 py-3 text-right font-bold text-slate-800">{paymentMethod || "N/A"}</td>
               </tr>
             )}
 

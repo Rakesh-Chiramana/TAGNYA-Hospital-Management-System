@@ -10,6 +10,8 @@ export interface MasterBillItem {
   amount: number;
 }
 
+export type MasterBillReportType = "consultation" | "bed" | "pharmacy" | null;
+
 export interface MasterBill {
   patient: Patient;
   bed: Bed | undefined;
@@ -24,6 +26,8 @@ export interface MasterBill {
   discount: number;
   subtotal: number;
   total: number;
+  reportType: MasterBillReportType;
+  paymentMethod?: string;
   }
 
 
@@ -57,6 +61,15 @@ export const useBillingManagement = (
     );
 
     const selectedInvoices = invoice ? [invoice] : patientInvoices;
+
+    const service = invoice?.services?.toLowerCase() || "";
+    const reportType: MasterBillReportType = invoice
+      ? service.includes("pharma") || service.includes("medicine") || service.includes("drug")
+        ? "pharmacy"
+        : service.includes("bed") || service.includes("room") || service.includes("ward")
+          ? "bed"
+          : "consultation"
+      : null;
 
     const bed = beds.find((b: Bed) => b.patientId === patient.id || b.patientName === patient.name);
     const isInpatient = !!bed && bed.isOccupied;
@@ -124,6 +137,8 @@ export const useBillingManagement = (
         sum + parseFloat(inv.amount.replace(/[^0-9.-]+/g, "")),
       0
     ),
+  reportType,
+  paymentMethod: invoice?.paymentMethod,
 };
 
     setSelectedPatientBill(masterBill);

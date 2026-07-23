@@ -7,7 +7,7 @@
   justify-content: center;
   padding: 1rem;
   background-color: rgba(6, 40, 78, 0.4);
- 
+
 }
 
 .modal-content {
@@ -16,7 +16,7 @@
   box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
   width: 100%;
   max-height: 90vh;
-  overflow: hidden;
+  overflow: clip;
   display: flex;
   flex-direction: column;
 }
@@ -63,15 +63,38 @@
   flex: 1;
 }
 
-.max-w-2xl { max-width: 42rem; }
-.max-w-4xl { max-width: 56rem; }
-.max-w-6xl { max-width: 72rem; }
-.max-w-7xl { width: 95vw; max-width: 95vw; }
-.max-w-full { width: 98vw; max-width: 98vw; }
+.max-w-2xl {
+  max-width: 42rem;
+}
+
+.max-w-4xl {
+  max-width: 56rem;
+}
+
+.max-w-6xl {
+  max-width: 72rem;
+}
+
+.max-w-7xl {
+  width: 95vw;
+  max-width: 95vw;
+}
+
+.max-w-full {
+  width: 98vw;
+  max-width: 98vw;
+}
 
 @keyframes scale-in {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .animate-scale-in {
@@ -79,6 +102,7 @@
 }
 
 @media print {
+
   .modal-overlay,
   .modal-content,
   .modal-body,
@@ -98,6 +122,6 @@
 
   .modal-overlay {
     background: none !important;
-    
+
   }
 }
