@@ -7,7 +7,7 @@ const PAYMENT_MODES = ["Cash", "Card", "UPI", "Net Banking", "Insurance", "Chequ
 interface Props {
   amount: number;
   onClose: () => void;
-  onSubmit: (paymentMode: string) => Promise<void>;
+  onSubmit: (paymentMode: string) =>void;
 }
 
 const MarkPaidModal: React.FC<Props> = ({ amount, onClose, onSubmit }) => {
@@ -15,11 +15,16 @@ const MarkPaidModal: React.FC<Props> = ({ amount, onClose, onSubmit }) => {
   const [saving, setSaving] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
+  e.preventDefault();
+
+  setSaving(true);
+
+  try {
     await onSubmit(mode);
+  } finally {
     setSaving(false);
-  };
+  }
+};
 
   return (
     <Modal isOpen={true} onClose={onClose} title="Mark Entry as Paid">

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { DischargeSummary as DischargeSummaryType, UserRole } from "../../../shared/types";
+import  { useEffect, useState } from "react";
+import { DischargeSummary as DischargeSummaryType, Patient, UserRole } from "../../../shared/types";
 import { jsPDF } from "jspdf";
 import { HOSPITAL_FOOTER_CONTACT } from "../../../shared/constants/hospitalBranding";
 import hospitalLogo from "../../../assets/sarada_logo.png";
@@ -11,7 +11,7 @@ import {
 
 interface UseDischargeSummaryProps {
   onSave: (summary: DischargeSummaryType) => void;
-  patients: any[];
+  patients: Patient[];
   userRole: UserRole;
 }
 
@@ -21,9 +21,8 @@ type DischargeSummaryFormData = DischargeSummaryType & {
 
 export const useDischargeSummary = ({ onSave, patients, userRole }: UseDischargeSummaryProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingSummary, setEditingSummary] = useState<DischargeSummaryType | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [patientList, setPatientList] = useState<any[]>(patients);
+  const [patientList, setPatientList] = useState<Patient[]>(patients);
+    const [editingSummary, setEditingSummary] = useState<DischargeSummaryType | null>(null); 
 
   useEffect(() => {
     loadPatients();
@@ -43,6 +42,7 @@ export const useDischargeSummary = ({ onSave, patients, userRole }: UseDischarge
         setPatientList(patients);
       }
     }
+  
   };
 
   const canEdit = userRole === UserRole.ADMIN || userRole === UserRole.DOCTOR;
@@ -166,12 +166,17 @@ export const useDischargeSummary = ({ onSave, patients, userRole }: UseDischarge
         onSave({ ...formData, isReady: true });
         setIsModalOpen(false);
         setFormData(emptySummary);
-        setEditingSummary(null);
+        // setEditingSummary(null);
       }
-    } catch (error: any) {
-      console.error(error);
-      alert(error?.message || "Failed to save discharge summary.");
-    }
+    } catch (error) {
+  console.error(error);
+
+  if (error instanceof Error) {
+    alert(error.message);
+  } else {
+    alert("Failed to save discharge summary.");
+  }
+}
   };
 
   const handleAddMedication = () => {
@@ -192,7 +197,7 @@ export const useDischargeSummary = ({ onSave, patients, userRole }: UseDischarge
 
   const handleEdit = (summary: DischargeSummaryType) => {
     setFormData({ ...summary, ipNo: "" });
-    setEditingSummary(summary);
+    setEditingSummary(summary); 
     setIsModalOpen(true);
   };
 
@@ -431,10 +436,6 @@ export const useDischargeSummary = ({ onSave, patients, userRole }: UseDischarge
   return {
     isModalOpen,
     setIsModalOpen,
-    editingSummary,
-    setEditingSummary,
-    searchQuery,
-    setSearchQuery,
     formData,
     setFormData,
     canEdit,
@@ -446,6 +447,8 @@ export const useDischargeSummary = ({ onSave, patients, userRole }: UseDischarge
     handleSave,
     handleEdit,
     generatePDF,
+    editingSummary,  
+    setEditingSummary
   };
 };
 

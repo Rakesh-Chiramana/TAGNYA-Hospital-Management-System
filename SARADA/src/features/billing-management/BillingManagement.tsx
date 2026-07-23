@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import "./styles/billing-management.css";
-import { Patient, Bed } from "../../shared/types";
-import { useLedger } from "./hooks/useLedger";
+import { Patient, Bed, Invoice } from "../../shared/types";
+import {useLedger,CreateLedgerPayload,} from "./hooks/useLedger";
 import { useBillingManagement } from "./hooks/useBillingManagement";
 
 // Subcomponents
@@ -11,15 +11,18 @@ import MasterBillOverlay from "./components/MasterBillOverlay";
 import CreateLedgerModal from "./components/CreateLedgerModal";
 import MarkPaidModal from "./components/MarkPaidModal";
 
+
+
+
 interface Props {
-  invoices?: any[];
-  onAddInvoice?: (i: any) => void;
-  onDeleteInvoice?: (id: string) => void;
+  invoices: Invoice[];
+  onAddInvoice: (i:any)=>void;
+  onDeleteInvoice:(id:string)=>void;
   patients: Patient[];
   beds: Bed[];
 }
 
-const BillingManagement: React.FC<Props> = ({ patients, beds }: Props) => {
+const BillingManagement: React.FC<Props> = ({ patients, beds }) => {
   const {
     filteredEntries,
     loading,
@@ -40,22 +43,66 @@ const BillingManagement: React.FC<Props> = ({ patients, beds }: Props) => {
   const [payingEntry, setPayingEntry] = useState<{ id: number; amount: number } | null>(null);
 
   // Map Ledger Entries to Invoices so they show up in the Master Settlement report
-  const mappedInvoices = filteredEntries.map((e) => ({
+ // Map Ledger Entries to Invoices so they show up in the Master Settlement report
+const mappedInvoices: Invoice[] = useMemo(() => {
+  return filteredEntries.map((e): Invoice => ({
     id: e.ledger_no,
     name: e.patient_name,
     patientId: e.patient_id ? `P-${e.patient_id}` : "GUEST",
     services: `${e.department} - ${e.service_name}`,
     amount: `₹${Number(e.amount).toFixed(0)}`,
     status: e.payment_status,
-    date: e.created_at ? new Date(e.created_at).toLocaleDateString() : new Date().toLocaleDateString(),
-    time: e.created_at ? new Date(e.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    charges: e.charges || undefined, 
+    date: e.created_at
+      ? new Date(e.created_at).toLocaleDateString()
+      : new Date().toLocaleDateString(),
+    time: e.created_at
+      ? new Date(e.created_at).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+    charges: e.charges,
   }));
+}, [filteredEntries]);
 
   // MasterBill overlay (print) — reuse existing logic for patient billing report
   const { selectedPatientBill, setSelectedPatientBill, generateMasterBill, totalSum } =
-    useBillingManagement(mappedInvoices, () => { }, () => { }, patients, beds);
+    useBillingManagement(
+  mappedInvoices,
+  patients,
+  beds
+);
 
+    const closeCreateModal = () => {
+  setIsCreateOpen(false);
+};
+
+const handleCreateLedger = async (payload: CreateLedgerPayload) => {
+  const ok = await createEntry(payload);
+
+  if (ok) {
+    setIsCreateOpen(false);
+  }
+};
+
+const closePaymentModal = () => {
+  setPayingEntry(null);
+};
+
+const handleMarkPaid = async (paymentMode: string) => {
+  if (!payingEntry) return;
+
+  await markPaid(
+    payingEntry.id,
+    paymentMode,
+    payingEntry.amount
+  );
+
+  setPayingEntry(null);
+};
   return (
     <div className="billing-container">
       {/* Revenue Stats */}
@@ -104,25 +151,19 @@ const BillingManagement: React.FC<Props> = ({ patients, beds }: Props) => {
       {/* Create Ledger Entry Modal */}
       <CreateLedgerModal
         isOpen={isCreateOpen}
-        onClose={() => setIsCreateOpen(false)}
+        onClose={closeCreateModal}
         patients={patients}
         submitting={submitting}
-        onSubmit={async (payload) => {
-          const ok = await createEntry(payload);
-          if (ok) setIsCreateOpen(false);
-        }}
+        onSubmit={handleCreateLedger}
       />
 
       {/* Mark Paid Modal */}
       {payingEntry && (
-        <MarkPaidModal
-          amount={payingEntry.amount}
-          onClose={() => setPayingEntry(null)}
-          onSubmit={async (paymentMode) => {
-            await markPaid(payingEntry.id, paymentMode, payingEntry.amount);
-            setPayingEntry(null);
-          }}
-        />
+       <MarkPaidModal
+        amount={payingEntry.amount}
+         onSubmit={handleMarkPaid}
+         onClose={closePaymentModal}
+       />
       )}
     </div>
   );

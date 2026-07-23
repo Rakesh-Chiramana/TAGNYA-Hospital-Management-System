@@ -31,11 +31,26 @@ interface SavedExpenseSheet {
   savedAt: string;
 }
 
-const groupDbRowsIntoSheets = (dbRows: any[]): SavedExpenseSheet[] => {
+interface ExpenseDBRow {
+  id: number;
+  doctor_name: string;
+  from_date: string | null;
+  to_date: string | null;
+  bill_date: string | null;
+  created_at: string;
+  doctor_fee: number | string;
+  snacks: number | string;
+  food: number | string;
+  accommodation: number | string;
+  medicine: number | string;
+  other_expense: number | string;
+}
+
+const groupDbRowsIntoSheets = (dbRows: ExpenseDBRow[]): SavedExpenseSheet[] => {
   const groups: { [key: string]: SavedExpenseSheet } = {};
 
   dbRows.forEach((row) => {
-    const formatDate = (dVal: any) => {
+    const formatDate = (dVal: string | null) => {
       if (!dVal) return "";
       try {
         const dateObj = new Date(dVal);
@@ -130,15 +145,21 @@ const ExpenseModule: React.FC = () => {
     fetchSavedSheets();
   }, []);
 
-  const handleRowChange = (index: number, field: keyof ExpenseRow, value: any) => {
-    const updatedRows = [...rows];
-    if (field === "date") {
-      updatedRows[index].date = value;
-    } else if (field !== "id") {
-      (updatedRows[index] as any)[field] = Number(value) || 0;
-    }
-    setRows(updatedRows);
-  };
+  const handleRowChange = (
+  index: number,
+  field: keyof ExpenseRow,
+  value: string
+) => {
+  const updatedRows = [...rows];
+
+  if (field === "date") {
+    updatedRows[index].date = value;
+  } else if (field !== "id") {
+    updatedRows[index][field] = Number(value) || 0;
+  }
+
+  setRows(updatedRows);
+};
 
   const updateRowsForRange = (startStr: string, endStr: string) => {
     const partsStart = startStr.split("-").map(Number);
@@ -458,7 +479,8 @@ const ExpenseModule: React.FC = () => {
       },
     });
 
-    const finalY = (doc as any).lastAutoTable.finalY + 15;
+    const finalY = (doc as jsPDF & { lastAutoTable: { finalY: number } })
+  .lastAutoTable.finalY + 15;
 
     // Grand Total
     doc.setFontSize(12);

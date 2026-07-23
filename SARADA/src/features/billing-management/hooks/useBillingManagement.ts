@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Invoice, Patient, Bed } from "../../../shared/types";
+import { Invoice, Patient, Bed, ChargeDetails } from "../../../shared/types";
 
 import BillingData from "../data/billingMockData.json";
 
@@ -16,7 +16,7 @@ export interface MasterBill {
   days: number;
   bedCharge: number;
   items: MasterBillItem[];
-  chargesBreakdown?: {          // 👈 ADD whole block
+  chargesBreakdown?: ChargeDetails;        // 👈 ADD whole block
   bedCharges: { type: string; days: number; rate: number; amount: number }[];
   pharmacyCharges: { medicine: string; quantity: number; rate: number; amount: number }[];
   nursingCharge: number;
@@ -25,12 +25,10 @@ export interface MasterBill {
   subtotal: number;
   total: number;
   }
-}
+
 
 export const useBillingManagement = (
   invoices: Invoice[],
-  onAddInvoice: (i: Invoice) => void,
-  onDeleteInvoice: (id: string) => void,
   patients: Patient[],
   beds: Bed[]
 ) => {
@@ -38,39 +36,9 @@ export const useBillingManagement = (
   const [filterStatus, setFilterStatus] = useState(BillingData.filterStatuses[0]);
   const [selectedPatientBill, setSelectedPatientBill] = useState<MasterBill | null>(null);
 
-  const handleBillSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    const pName = formData.get("patientName") as string;
-    const patient = patients.find(p => p.name === pName);
+  
 
-    const maxId = invoices.reduce((max, inv) => {
-      const idNum = parseInt(inv.id.split("-")[1] || String(BillingData.defaultInvoiceStartId));
-      return idNum > max ? idNum : max;
-    }, BillingData.defaultInvoiceStartId);
-
-    const newBill: Invoice = {
-      id: `INV-${maxId + 1}`,
-      name: pName,
-      patientId: patient?.id || "GUEST",
-      services: formData.get("service") as string,
-      amount: `₹${Number(formData.get("amount")).toFixed(0)}`,
-      status: "Pending",
-      date: new Date().toLocaleDateString(),
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-    onAddInvoice(newBill);
-    setIsModalOpen(false);
-  };
-
-  const handleDelete = (id: string) => {
-    if (window.confirm("Are you sure you want to delete this invoice?")) {
-      onDeleteInvoice(id);
-    }
-  };
+ 
 
   const filteredInvoices = useMemo(() => {
     return filterStatus === "All"
@@ -115,30 +83,66 @@ export const useBillingManagement = (
         }]
       : [];
 
-    const masterBill: MasterBill = {
-      patient,
-      bed,
-      days: diffDays,
-      bedCharge: totalBedCharge,
-      items: [
-        ...bedItem,
-        ...selectedInvoices.map((inv: Invoice) => ({
-          date: inv.date || patient.admissionDate,
-          time: inv.time || "10:00 AM",
-          description: cleanDesc(inv.services),
-          amount: parseFloat(inv.amount.replace(/[^0-9.-]+/g, "")),
-        })),
-      ],
-       chargesBreakdown: invoice?.charges || undefined,
-    };
+   const masterBill: MasterBill = {
+  patient,
+  bed,
+  days: diffDays,
+  bedCharge: totalBedCharge,
+
+  items: [
+    ...bedItem,
+    ...selectedInvoices.map((inv: Invoice) => ({
+      date: inv.date || patient.admissionDate,
+      time: inv.time || "10:00 AM",
+      description: cleanDesc(inv.services),
+      amount: parseFloat(inv.amount.replace(/[^0-9.-]+/g, "")),
+    })),
+  ],
+
+  chargesBreakdown: invoice?.charges || undefined,
+
+  bedCharges: invoice?.charges?.bedCharges || [],
+  
+  pharmacyCharges: invoice?.charges?.pharmacyCharges || [],
+
+  nursingCharge: invoice?.charges?.nursingCharge || 0,
+
+  miscCharge: invoice?.charges?.miscCharge || 0,
+
+  discount: invoice?.charges?.discount || 0,
+
+  subtotal: invoice?.charges?.subtotal || 
+    selectedInvoices.reduce(
+      (sum, inv) =>
+        sum + parseFloat(inv.amount.replace(/[^0-9.-]+/g, "")),
+      0
+    ),
+
+  total: invoice?.charges?.total ||
+    selectedInvoices.reduce(
+      (sum, inv) =>
+        sum + parseFloat(inv.amount.replace(/[^0-9.-]+/g, "")),
+      0
+    ),
+};
 
     setSelectedPatientBill(masterBill);
   };
 
-  const totalSum = selectedPatientBill?.items.reduce(
-    (acc: number, item: MasterBillItem) => acc + item.amount,
-    0,
-  ) || 0;
+  const totalSum = useMemo(() => {
+
+  if (!selectedPatientBill) return 0;
+
+  if (selectedPatientBill.chargesBreakdown) {
+    return selectedPatientBill.chargesBreakdown.total;
+  }
+
+  return selectedPatientBill.items.reduce(
+    (acc, item) => acc + item.amount,
+    0
+  );
+
+}, [selectedPatientBill]);
 
   const consolidatedYield = invoices.reduce((acc, inv) => acc + parseFloat(inv.amount.replace(/[^0-9.-]+/g, "") || "0"), 0);
 
@@ -149,8 +153,6 @@ export const useBillingManagement = (
     setFilterStatus,
     selectedPatientBill,
     setSelectedPatientBill,
-    handleBillSubmit,
-    handleDelete,
     filteredInvoices,
     handlePrint,
     generateMasterBill,

@@ -1,5 +1,25 @@
 const API = "http://localhost:5000/api/discharge";
 
+interface SaveDischargePayload {
+  patient_id: string;
+  ip_no: string;
+  patient_name: string;
+  discharge_date: string;
+  chief_complaints: string;
+  present_history: string;
+  hospital_course: string;
+  temperature: string;
+  pulse: string;
+  bp: string;
+  resp: string;
+  spo2: string;
+  condition_at_discharge: string;
+  final_diagnosis: string;
+  medications: string;
+  discharge_advice: string;
+  review_date: string;
+  finalize_report: boolean;
+}
 const parseJson = async (res: Response) => {
   const text = await res.text();
   try {
@@ -21,7 +41,7 @@ export const getPatientById = async (id: string) => {
   return parseJson(res);
 };
 
-export const saveDischarge = async (data: any) => {
+export const saveDischarge = async (data: SaveDischargePayload) => {
   const res = await fetch(API, {
     method: "POST",
     headers: {

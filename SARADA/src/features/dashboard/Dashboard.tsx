@@ -1,6 +1,6 @@
 import React from "react";
 import "./styles/dashboard.css";
-import { UserRole, Patient } from "../../shared/types";
+import { UserRole, Patient, LabTest } from "../../shared/types";
 import { useDashboard, Props } from "./hooks/useDashboard";
 import { ShieldCheck, TrendingUp } from "../../shared/utils/icons";
 
@@ -33,6 +33,10 @@ const Dashboard: React.FC<Props> = (props) => {
     doctorAppointments,
     doctorLabTests,
   } = useDashboard(props);
+
+  interface DoctorDashboardProps {
+    doctorLabTests: LabTest[];
+}
 
   const [showAllInvoicesModal, setShowAllInvoicesModal] = React.useState(false);
   const [showAllPatientsModal, setShowAllPatientsModal] = React.useState<"IP" | "OP" | "ALL" | null>(null);

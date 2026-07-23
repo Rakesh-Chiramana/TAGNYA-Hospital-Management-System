@@ -1,15 +1,44 @@
 import React from "react";
 import { ArrowLeft, Trash2, ShieldCheck } from "../../../shared/utils/icons";
 import { BulkOrderItem } from "../services/pharmacyService";
+type PharmacyView =
+ | "dashboard"
+ | "createMedicine"
+ | "purchaseEntry"
+ | "salesEntry"
+ | "salesBills"
+ | "purchaseBills"
+ | "vendors"
+ | "vendorBills";
+
+interface Medicine {
+  id: string | number;
+  medicine_name?: string;
+  name?: string;
+  hsn_code?: string;
+  hsnCode?: string;
+  company_name?: string;
+  companyName?: string;
+  gst_percentage?: number;
+  taxPercentage?: number;
+}
+
+interface Vendor {
+  id: string | number;
+  name: string;
+  status?: string;
+  dlNo?: string;
+  gstNo?: string;
+}
 
 interface PurchaseEntryViewProps {
   purchaseCurrentItem: BulkOrderItem;
-  updatePurchaseCurrentItem: (field: keyof BulkOrderItem, value: any) => void;
+  updatePurchaseCurrentItem: (field: keyof BulkOrderItem, value: string | number) => void;
   addCurrentItemToOrder: () => void;
   bulkOrderItems: BulkOrderItem[];
   removeBulkOrderItem: (index: number) => void;
 
-  vendors?: any[];
+  vendors?: Vendor[];
   purchaseSupplierName: string;
   setPurchaseSupplierName: (val: string) => void;
   purchaseInvoiceNo: string;
@@ -30,7 +59,9 @@ interface PurchaseEntryViewProps {
   setPurchasePaidAmount: (val: number) => void;
 
   handleBulkOrderSubmit: (e: React.FormEvent) => void;
-  setPharmacyView: (view: any) => void;
+  
+
+setPharmacyView: (view: PharmacyView) => void;
 }
 
 const PurchaseEntryView: React.FC<PurchaseEntryViewProps> = ({
@@ -61,7 +92,7 @@ const PurchaseEntryView: React.FC<PurchaseEntryViewProps> = ({
   handleBulkOrderSubmit,
   setPharmacyView
 }) => {
-  const [medicines, setMedicines] = React.useState<any[]>([]);
+  const [medicines, setMedicines] = React.useState<Medicine[]>([]);
 
   React.useEffect(() => {
     loadMedicines();
@@ -89,14 +120,14 @@ const PurchaseEntryView: React.FC<PurchaseEntryViewProps> = ({
   const getMedicineSelectValue = () => {
     if (!purchaseCurrentItem.name) return "";
     const selected = medicines.find(
-      (m: any) => (m.medicine_name || m.name) === purchaseCurrentItem.name
+      (m: Medicine) => (m.medicine_name || m.name) === purchaseCurrentItem.name
     );
     return selected ? String(selected.id) : "";
   };
 
   const handleMedicineSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const val = e.target.value;
-    const selected = medicines.find((m: any) => String(m.id) === String(val));
+    const selected = medicines.find((m: Medicine) => String(m.id) === String(val));
     if (selected) {
       updatePurchaseCurrentItem("name", selected.medicine_name || selected.name || "");
       updatePurchaseCurrentItem("hsnCode", selected.hsn_code || selected.hsnCode || "");
@@ -437,7 +468,7 @@ const PurchaseEntryView: React.FC<PurchaseEntryViewProps> = ({
                   className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-xs outline-none focus:border-purple-400 font-medium text-slate-700"
                 />
                 <datalist id="purchase-vendors-datalist">
-                  {vendors.filter((v: any) => v.status === "Active").map((v: any) => (
+                  {vendors.filter((v: Vendor) => v.status === "Active").map((v: Vendor) => (
                     <option key={v.id} value={v.name} />
                   ))}
                 </datalist>

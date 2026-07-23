@@ -2,8 +2,55 @@ import React from "react";
 import { Star, Coffee, Heart, Wind, Smile } from "../../../shared/utils/icons";
 import dashboardData from "../data/dashboardMockData.json";
 
+interface ColorStyle {
+  bgLight: string;
+  text: string;
+}
+
+interface DashboardData {
+  colorStyles: {
+    amber: ColorStyle;
+    rose: ColorStyle;
+    sky: ColorStyle;
+    emerald: ColorStyle;
+  };
+}
+
+type HospitalityColor = "amber" | "rose" | "sky" | "emerald";
 const HospitalitySection: React.FC = () => {
-  const { colorStyles } = dashboardData as any;
+  const { colorStyles } = dashboardData as DashboardData;
+
+  const hospitalityItems: {
+    icon: React.ElementType;
+    title: string;
+    desc: string;
+    color: HospitalityColor;
+  }[] = [
+    {
+      icon: Coffee,
+      title: "Patient Comfort",
+      desc: "Premium amenities for rapid recovery.",
+      color: "amber",
+    },
+    {
+      icon: Heart,
+      title: "Compassionate Care",
+      desc: "Personalized attention from dedicated staff.",
+      color: "rose",
+    },
+    {
+      icon: Wind,
+      title: "Healing Atmosphere",
+      desc: "Advanced air purification systems.",
+      color: "sky",
+    },
+    {
+      icon: Smile,
+      title: "Concierge Support",
+      desc: "24/7 assistance for families.",
+      color: "emerald",
+    },
+  ];
 
   return (
     <div className="space-y-8">
@@ -25,32 +72,7 @@ const HospitalitySection: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        {[
-          {
-            icon: Coffee,
-            title: "Patient Comfort",
-            desc: "Premium amenities for rapid recovery.",
-            color: "amber",
-          },
-          {
-            icon: Heart,
-            title: "Compassionate Care",
-            desc: "Personalized attention from dedicated staff.",
-            color: "rose",
-          },
-          {
-            icon: Wind,
-            title: "Healing Atmosphere",
-            desc: "Advanced air purification systems.",
-            color: "sky",
-          },
-          {
-            icon: Smile,
-            title: "Concierge Support",
-            desc: "24/7 assistance for families.",
-            color: "emerald",
-          },
-        ].map((item, i) => (
+        {hospitalityItems.map((item, i) => (
           <div
             key={i}
             className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all group"

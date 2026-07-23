@@ -141,6 +141,27 @@ export interface Doctor {
   availability?: Availability[];
 }
 
+export interface ChargeDetails {
+  bedCharges: {
+    type: string;
+    days: number;
+    rate: number;
+    amount: number;
+  }[];
+
+  pharmacyCharges: {
+    medicine: string;
+    quantity: number;
+    rate: number;
+    amount: number;
+  }[];
+
+  nursingCharge: number;
+  miscCharge: number;
+  discount: number;
+  subtotal: number;
+  total: number;
+}
 export interface Invoice {
   id: string;
   name: string;
@@ -154,26 +175,7 @@ export interface Invoice {
   date: string;
   time: string;
   paymentMethod?: string;
-  charges?: {                    // 👈 ADD (whole block)
-    bedCharges: {
-      type: string;
-      days: number;
-      rate: number;
-      amount: number;
-    }[];
-    pharmacyCharges: {
-      medicine: string;
-      quantity: number;
-      rate: number;
-      amount: number;
-    }[];
-    nursingCharge: number;
-    miscCharge: number;
-    discount: number;
-    subtotal: number;
-    tax: number;
-    total: number;
-  };
+  charges?: ChargeDetails;
 
 }
 
@@ -254,4 +256,47 @@ export interface StaffMember {
   experience?: string;
   study?: string;
   emergency?: string;
+}
+
+export interface AdmissionData {
+  patientId?: string;
+  patientName: string;
+  doctorName: string;
+  ward?: string;
+  bed?: string;
+  admissionDate?: string;
+  reason?: string;
+}
+
+
+export interface VisitData {
+  diagnosis: string;
+  notes: string;
+  prescription?: Prescription[];
+}
+
+
+export interface BedBookingData {
+  patientId: string;
+  patientName: string;
+  doctorName?: string;
+  admissionDate?: string;
+}
+
+
+export interface BedUpdateData {
+  wardType?: WardType;
+  wardNo?: string;
+  isOccupied?: boolean;
+  patientName?: string;
+  patientId?: string;
+}
+
+
+export interface DischargeData {
+  patientId: string;
+  patientName: string;
+  dischargeDate: string;
+  diagnosis: string;
+  summary: string;
 }

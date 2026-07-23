@@ -1,11 +1,41 @@
 import React, { useState } from "react";
-import { ArrowLeft, Receipt, Calendar, CreditCard, CheckCircle2, AlertCircle, PlusCircle, History, Package, Printer } from "../../../shared/utils/icons";
+import { ArrowLeft, Receipt, Calendar, PlusCircle, History, Package, Printer } from "../../../shared/utils/icons";
 
+interface VendorBillItem {
+  name:string;
+  qty:number;
+  buyPrice:number;
+  batchNo?:string;
+  expiry?:string;
+}
+
+interface VendorPayment {
+  amountPaid:number;
+  itemsPaidCount:number;
+  date:string;
+  notes?:string;
+}
+
+interface VendorBill {
+  id:string;
+  vendorName:string;
+  vendor?: string;  
+  invoiceNo:string;
+  date:string;
+  dlNo?: string;
+  total:number;
+  paidAmount:number;
+  balance:number;
+  totalDeliveredQty?: number;
+  totalPaidQty?: number; 
+  items:VendorBillItem[];
+  paymentHistory?:VendorPayment[];
+}
 interface VendorBillsViewProps {
-  stockBills: any[];
+  stockBills: VendorBill[];
   onAddVendorPaymentTerm: (billId: string, amountPaid: number, itemsPaidCount: number, notes: string) => void;
-  onPrintBill?: (bill: any) => void;
-  setPharmacyView: (view: any) => void;
+  onPrintBill?: (bill: VendorBill) => void;
+  setPharmacyView: (view: "dashboard" | "createMedicine" | "purchaseEntry" | "salesEntry" | "salesBills") => void;
 }
 
 const VendorBillsView: React.FC<VendorBillsViewProps> = ({
@@ -14,13 +44,13 @@ const VendorBillsView: React.FC<VendorBillsViewProps> = ({
   onPrintBill,
   setPharmacyView,
 }) => {
-  const [selectedBill, setSelectedBill] = useState<any | null>(null);
+  const [selectedBill, setSelectedBill] = useState<VendorBill | null>(null);
   const [isTermPaymentModalOpen, setIsTermPaymentModalOpen] = useState(false);
   const [paymentAmount, setPaymentAmount] = useState<number | string>("");
   const [itemsPaidCount, setItemsPaidCount] = useState<number | string>("");
   const [paymentNotes, setPaymentNotes] = useState("");
 
-  const handleOpenPaymentModal = (bill: any) => {
+  const handleOpenPaymentModal = (bill: VendorBill) => {
     setSelectedBill(bill);
     setPaymentAmount("");
     setItemsPaidCount("");
@@ -82,7 +112,7 @@ const VendorBillsView: React.FC<VendorBillsViewProps> = ({
           ) : (
             stockBills.map((bill) => {
               const items = bill.items || [];
-              const totalDelivered = bill.totalDeliveredQty || items.reduce((acc: number, i: any) => acc + (Number(i.qty) || 0), 0);
+              const totalDelivered = bill.totalDeliveredQty || items.reduce((acc: number, i: VendorBillItem) => acc + (Number(i.qty) || 0), 0);
               const totalPaidQty = bill.totalPaidQty || (bill.balance <= 0 ? totalDelivered : Math.round(totalDelivered * (bill.paidAmount / (bill.total || 1))));
               const remainingQty = Math.max(0, totalDelivered - totalPaidQty);
               const isFullyPaid = Number(bill.balance || 0) <= 0;
@@ -157,7 +187,7 @@ const VendorBillsView: React.FC<VendorBillsViewProps> = ({
                         <span>Batch & Expiry</span>
                       </div>
                       <div className="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
-                        {items.map((item: any, idx: number) => (
+                        {items.map((item:  VendorBillItem, idx: number) => (
                           <div key={idx} className="flex items-center justify-between text-xs bg-white p-2.5 rounded-lg border border-slate-200">
                             <div>
                               <span className="font-bold text-slate-800">{item.name}</span>
@@ -221,7 +251,7 @@ const VendorBillsView: React.FC<VendorBillsViewProps> = ({
                         <span>Term Payment Installment Log</span>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        {bill.paymentHistory.map((term: any, tIdx: number) => (
+                        {bill.paymentHistory.map((term: VendorPayment, tIdx: number) => (
                           <div key={tIdx} className="bg-blue-50/50 border border-blue-100 p-3 rounded-xl text-xs space-y-1">
                             <div className="flex justify-between font-bold text-slate-800">
                               <span>Paid: ₹{term.amountPaid}</span>

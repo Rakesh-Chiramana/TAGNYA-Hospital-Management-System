@@ -183,8 +183,15 @@ const breakdownTotal = useBreakdown ? chargesBreakdown!.total : 0;
     : rawBedCharge;
 
   const otherTotal = otherItems.reduce((sum, item) => sum + item.amount, 0);
-  const subtotal = calculatedBedCharge + pharmacyTotal + otherTotal;
-  const finalTotal = subtotal;
+  const subtotal =
+  calculatedBedCharge +
+  pharmacyTotal +
+  otherTotal +
+  breakdownNursing +
+  breakdownMisc;
+
+  const finalTotal =
+  subtotal - breakdownDiscount;
 
   const handlePrint = () => {
   // Build bed charge rows
@@ -508,7 +515,7 @@ const breakdownTotal = useBreakdown ? chargesBreakdown!.total : 0;
           <div className="flex justify-between w-64 border-t border-slate-200 pt-2 text-sm">
             <span className="font-extrabold text-slate-800">Total payable</span>
             <span className="font-black text-[#0f2c59] text-base">
-              ₹{Number(useBreakdown ? breakdownTotal : finalTotal).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              ₹{Number(finalTotal).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
           </div>
         </div>

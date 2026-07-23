@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "../../../shared/components/Modal";
 import { UserPlus, Receipt, PenTool } from "../../../shared/utils/icons";
-import { Patient } from "../../../shared/types";
+import { Doctor} from "../../../shared/types";
 
 interface RegistrationModalProps {
   isOpen: boolean;
@@ -12,7 +12,7 @@ interface RegistrationModalProps {
   setPatientLastName: (val: string) => void;
   selectedDoctor: string;
   setSelectedDoctor: (val: string) => void;
-  doctors: any[];
+  doctors: Doctor[];
   DOCTOR_FEES: Record<string, number>;
   followUp: { fee: number; status: string; discount: number };
   handleRegister: (e: React.FormEvent) => void;

@@ -9,17 +9,18 @@ import {
   User,
   Zap,
 } from "../../shared/utils/icons";
-import { Patient, UserRole, LabTest } from "../../shared/types";
+import { Patient, UserRole, LabTest,Invoice} from "../../shared/types";
 import { useLabLogic } from "./services/labService";
 import { generateLabReportPDF } from "./services/labPDFService";
 import LabReportModal from "./components/LabReportModal";
 import LabInvestigationModal from "./components/LabInvestigationModal";
 
+
 interface Props {
-  onAddInvoice?: (i: any) => void;
+  onAddInvoice?: (i: Invoice) => void;
   userRole?: UserRole;
   patients?: Patient[];
-  doctors?: any[];
+  doctors?: unknown[];
   labTests?: LabTest[];
   setLabTests?: React.Dispatch<React.SetStateAction<LabTest[]>>;
 }

@@ -5,7 +5,7 @@ import { Medicine, SalesEntryItem } from "../services/pharmacyService";
 interface SalesEntryViewProps {
   medicines: Medicine[];
   salesCurrentItem: SalesEntryItem;
-  updateSalesCurrentItem: (field: keyof SalesEntryItem, value: any) => void;
+  updateSalesCurrentItem: (field: keyof SalesEntryItem, value: string | number) => void;
   addSalesCurrentItem: () => void;
   salesItems: SalesEntryItem[];
   removeSalesItem: (index: number) => void;

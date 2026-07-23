@@ -1,11 +1,27 @@
 import React from "react";
 import { ArrowLeft } from "../../../shared/utils/icons";
 
+interface Medicine {
+  id: string;
+  name: string;
+  dosage?: string;
+  hsnCode?: string;
+  pack?: string;
+  taxPercentage?: string | number;
+  companyName?: string;
+}
+
+interface Vendor {
+  id: string;
+  name: string;
+  status?: string;
+}
+
 interface CreateMedicineViewProps {
-  recentlyCreatedMedicines: any[];
-  vendors?: any[];
+  recentlyCreatedMedicines: Medicine[];
+  vendors?: Vendor[];
   handleCreateMedicine: (e: React.FormEvent) => void;
-  setPharmacyView: (view: any) => void;
+  setPharmacyView: (view: "dashboard") => void;
 }
 
 const CreateMedicineView: React.FC<CreateMedicineViewProps> = ({

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Invoice, Patient, LabTest, UserRole } from "../../../shared/types";
+import { Invoice, Patient, LabTest, UserRole, Doctor } from "../../../shared/types";
 
 // Load mock data if present. Keep this dynamic so the file can be removed when using DB-only mode.
 let clinicalData: any = {};
@@ -112,6 +112,8 @@ export interface PharmacyBill {
   amountInWords: string;
   paymentMode: string;
   dlNo: string;
+  billType?: "Sales" | "Procurement";
+  vendor?: string;
 }
 
 const BILL_PREFIX = "Tgy-";
@@ -152,9 +154,9 @@ export const useClinicalModules = (
   type: "lab" | "pharmacy",
   onAddInvoice?: (i: Invoice) => void,
   patients: Patient[] = [],
-  doctors: any[] = [],
-  labTests: any[] = [],
-  setLabTests: React.Dispatch<React.SetStateAction<any[]>> = () => { },
+  doctors: Doctor[] = [],
+  labTests: LabTest[] = [],
+  setLabTests: React.Dispatch<React.SetStateAction<LabTest[]>> = () => { },
   userRole?: UserRole
 ) => {
   const [isModalOpen, setIsModalOpen] = useState(false);

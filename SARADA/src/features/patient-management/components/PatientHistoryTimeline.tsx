@@ -8,6 +8,13 @@ interface PatientHistoryTimelineProps {
   invoices: Invoice[];
 }
 
+interface PatientHistory {
+  date?: string;
+  time?: string;
+  event: string;
+  notes?: string;
+}
+
 const PatientHistoryTimeline: React.FC<PatientHistoryTimelineProps> = ({
   patient,
   appointments,
@@ -46,7 +53,7 @@ const PatientHistoryTimeline: React.FC<PatientHistoryTimelineProps> = ({
         color: "bg-emerald-500",
         details: i,
       })),
-    ...(patient.history || []).map((h: any, idx: number) => ({
+    ...(patient.history || []).map((h: PatientHistory, idx: number) => ({
       id: `hist-${idx}`,
       date: h.date,
       time: h.time || "",

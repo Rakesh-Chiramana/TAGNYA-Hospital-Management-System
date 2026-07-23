@@ -24,14 +24,18 @@ export const useLabLogic = (
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const totalCost = selectedTests.reduce(
-      (acc, t) => acc + ((labData.DIAGNOSTIC_PRICES as any)[t] || 0),
-      0
-    );
+  (acc, t) =>
+    acc + ((labData.DIAGNOSTIC_PRICES as Record<string, number>)[t] || 0),
+  0
+);
 
     let inRangeCount = 0;
     let totalMetrics = 0;
     Object.entries(manualResults).forEach(([key, val]) => {
-      const conf = (labData.DIAGNOSTIC_RANGES as any)[key];
+      const conf = (labData.DIAGNOSTIC_RANGES as Record<
+  string,
+  { min: number; max: number }
+>)[key];
       if (conf) {
         const numVal = parseFloat(val as string);
         if (!isNaN(numVal)) {
@@ -100,7 +104,7 @@ export const useLabLogic = (
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const testName = formData.get("testType") as string;
-    const cost = (labData.DIAGNOSTIC_PRICES as any)[testName] || 150;
+    const cost = (labData.DIAGNOSTIC_PRICES as Record<string, number>)[testName] || 150;
     const pid = formData.get("pid") as string;
 
     const newScan: LabTest = {

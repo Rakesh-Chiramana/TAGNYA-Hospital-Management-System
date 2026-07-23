@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { jsPDF } from "jspdf";
-import { Patient, Appointment, Invoice } from "../../../shared/types";
+import { Patient, Appointment, Invoice, Doctor } from "../../../shared/types";
 import { addProfessionalHeader, addProfessionalFooter, addSaradaHospitalHeader } from "../../../shared/utils/pdfHelper";
 import hospitalLogo from "../../../assets/sarada_logo.png";
 
@@ -11,7 +11,7 @@ interface UsePatientManagementProps {
   onAddPatient: (p: Patient) => void;
   onDeletePatient: (id: string) => void;
   onAddInvoice: (i: Invoice) => void;
-  doctors: any[];
+  doctors: Doctor[];
   registrationRequest?: { doctorName: string } | null;
   onRegistrationHandled?: () => void;
 }
