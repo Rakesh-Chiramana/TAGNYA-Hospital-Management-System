@@ -75,6 +75,7 @@ export const usePatientManagement = ({
     const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
     
     const x = clientX - rect.left;
+    
     const y = clientY - rect.top;
 
     ctx.lineTo(x, y);
